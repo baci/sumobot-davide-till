@@ -1,0 +1,133 @@
+' =========================================================================
+'
+'   File...... SumoBot_4.1_IR_Sensor_LCD.BS2
+'   Purpose... Tests IR sensor circuits
+'   Author.... Parallax, Inc.
+'              (Copyright (c) 2002 - 2004, All Rights Reserved)
+'   E-mail.... support@parallax.com
+'   Started...
+'   Updated... 03 JUN 2004
+'
+'   {$STAMP BS2}
+'   {$PBASIC 2.5}
+'
+' =========================================================================
+
+
+' -----[ Program Description ]---------------------------------------------
+
+
+' -----[ Revision History ]------------------------------------------------
+
+
+' -----[ I/O Definitions ]-------------------------------------------------
+
+LfIrOut         PIN     4                       ' left IR LED output
+LfIrIn          PIN     11                      ' left IR sensor input
+RtIrOut         PIN     15                      ' right IR LED output
+RtIrIn          PIN     14                      ' right IR sensor input
+
+E               PIN     1                       ' LCD Enable (1 = enabled)
+RW              PIN     2                       ' Read/Write\
+RS              PIN     3                       ' Reg Select (1 = char)
+LcdDirs         VAR     DIRB                    ' dirs for I/O redirection
+LcdBusOut       VAR     OUTB
+
+
+' -----[ Constants ]-------------------------------------------------------
+
+LcdCls          CON     $01                     ' clear the LCD
+LcdHome         CON     $02                     ' move cursor home
+LcdCrsrL        CON     $10                     ' move cursor left
+LcdCrsrR        CON     $14                     ' move cursor right
+LcdDispL        CON     $18                     ' shift chars left
+LcdDispR        CON     $1C                     ' shift chars right
+
+LcdDDRam        CON     $80                     ' Display Data RAM control
+LcdCGRam        CON     $40                     ' Character Generator RAM
+LcdLine1        CON     $80                     ' DDRAM address of line 1
+LcdLine2        CON     $C0                     ' DDRAM address of line 2
+
+
+' -----[ Variables ]-------------------------------------------------------
+
+irBits          VAR     Nib                     ' storage for IR target data
+irLeft          VAR     irBits.BIT1
+irRight         VAR     irBits.BIT0
+
+char		VAR	Byte			' character for LCD
+
+
+' -----[ EEPROM Data ]-----------------------------------------------------
+
+
+' -----[ Initialization ]--------------------------------------------------
+
+Initialize:
+  NAP 5                                         ' let LCD self-initialize
+  DIRL = %11111110                              ' setup pins for LCD
+
+LCD_Init:
+  LcdBusOut = %0011                           	' 8-bit mode
+  PULSOUT E, 3 : PAUSE 5
+  PULSOUT E, 3 : PAUSE 0
+  PULSOUT E, 3 : PAUSE 0
+  LcdBusOut = %0010                           	' 4-bit mode
+  PULSOUT E, 3
+  char = %00101000                            	' 2-line mode
+  GOSUB LCD_Command
+  char = %00001100                            	' on, no crsr, no blink
+  GOSUB LCD_Command
+  char = %00000110                            	' inc crsr, no disp shift
+  GOSUB LCD_Command
+  char = LcdCls
+  GOSUB LCD_Command
+
+
+' -----[ Program Code ]----------------------------------------------------
+
+Main:
+  DO
+    FREQOUT LfIrOut, 1, 38500                   ' modulate left IR LED
+    irLeft = ~LfIrIn                            ' read input (1 = target)
+
+    FREQOUT RtIrOut, 1, 38500                   ' modulate right IR LED
+    irRight = ~RtIrIn                           ' read input (1 = target)
+
+    char = LcdLine1 + 1				' show left IR
+    GOSUB LCD_Command
+    char = irLeft + "0"				' convert bit to ASCII
+    GOSUB LCD_Write_Char                      	' write it
+
+    char = LcdLine1 + 6				' show right IR
+    GOSUB LCD_Command
+    char = irRight + "0"
+    GOSUB LCD_Write_Char
+
+    PAUSE 20
+  LOOP
+
+  END
+
+
+' -----[ Subroutines ]-----------------------------------------------------
+
+' Send command to LCD
+' -- put command byte in 'char'
+
+LCD_Command:                                    ' write command to LCD
+  LOW RS
+  GOTO LCD_Write_Char
+
+' Write character to current cursor position
+' -- but byte to write in 'char'
+
+LCD_Write_Char:                                 ' write character to LCD
+  LcdDirs = %1111				' enable LCD bus outputs
+  LcdBusOut = char.HIGHNIB                    	' output high nibble
+  PULSOUT E, 3                                	' strobe the Enable line
+  LcdBusOut = char.LOWNIB                     	' output low nibble
+  PULSOUT E, 3
+  HIGH RS                                     	' return to character mode
+  LcdDirs = %0000				' release LCD bus
+  RETURN

@@ -1,0 +1,17 @@
+testing plan
+extra parts, planning
+reading sensors, controlling actors -> hardware layer
+think of a playing strategy
+state machines, control workflow
+poster, story and so on
+
+hardware considerations:
+4 wheels
+brakes
+irokese haircut
+
+milestones:
+initial design/project plan
+project review
+ready for showroom
+showroom
