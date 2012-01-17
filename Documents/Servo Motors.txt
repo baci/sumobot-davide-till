@@ -10,7 +10,6 @@ Move Backward servo = 500			   stopped
 									_      _
 - 1500, 2000, etc, is the time of high time during the pulse width. ___| |____| |___
 
-
 Graph:
 
 500 (very fast - backward) ---- 600 (fast - backward) ---- 700 (slow - backward) ---- 750 (stop) ----- 800 (slow - forward) ----- 900 (fast - forward) ----- 1000 (very fast - forward)
