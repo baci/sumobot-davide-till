@@ -14,10 +14,10 @@ void motorInit(){
 
 	/************** MOTOR TIMERS INITIALIZATION *****************/
 
-	DDRB |= 1<<PD5 | 1<<PD6; //for writing to OC1A,B
+	DDRB |= 1<<PB6 | 1<<PB7; //for writing to OC1B,C
 
 	//fast pwm timer 1
-	//Clear OC1A,B on compare match (set output to low level)
+	//Clear OC1B,C on compare match (set output to low level)
 	TCCR1A |= 1<<COM1A1 | 1<<COM1B1 | 1<<WGM11;
 	TCCR1B |= 1<<WGM13 | 1<<WGM12;    
 	ICR1 = 40000; // set top value

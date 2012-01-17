@@ -1,14 +1,14 @@
 onChip	color	onBoard	input	description
 PB0	blue	P11	X8	Infrared Sensor (R)
 PB1	yellow	P14	X9	Infrared Sensor (L)
-PB2	red	P4	X8	Infrared Actor (L)
-PB3	black	P15	X9	Infrared Actor (R)
+PB2	black	P7	X4	Line Sensor Power (R)
+PB3	blue	P8	X4	Line Sensor Input (R)
 PB4	blue	P10	X5	Line Sensor Power (L)
 PB5	yellow	P9	X5	Line Sensor Input (L)
-PB6	black	P7	X4	Line Sensor Power (R)
-PB7	blue	P8	X4	Line Sensor Input (R)
+PB6	blue	P13	X7	Servo Actor (L)		OC1B
+PB7	blue	P12	X6	Servo Actor (R)		OC1C
 
-PD5	blue	P13	X7	Servo Actor (L)		OC1A
-PD6	blue	P12	X6	Servo Actor (R)		OC1B
+PD0	red	P4	X8	Infrared Actor (L)
+PD1	black	P15	X9	Infrared Actor (R)
 PD8				Ground
 PD9				Voltage
