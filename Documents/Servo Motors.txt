@@ -1,4 +1,5 @@
 The increment of the servomotor is 2 micro-seconds every step. So, in the initialization we have to calculate that the value of the servor's speed has to be moltiplied by 2.
+The right motor movement always has to be decreased if the left motor movement is increased and they should go into the same direction.
 
 Example:
 Move Forward servo = 1000		// real speed 2000 microseconds
