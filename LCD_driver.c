@@ -1,42 +1,89 @@
-/*
-               BUTTLCD -- Butterfly LCD Driver
+//*****************************************************************************
+//
+//  File........: LCD_driver.c
+//
+//  Author(s)...: ATMEL Norway
+//
+//  Target(s)...: ATmega169
+//
+//  Compiler....: AVR-GCC 4.1.1; avr-libc 1.4.5
+//
+//  Description.: Functions used to control the AVR Butterfly LCD
+//
+//  Revisions...: 1.0
+//
+//  YYYYMMDD - VER. - COMMENT                                       - SIGN.
+//
+//  20021015 - 1.0  - Written for STK502                            - JLL
+//  20030116 - 2.0  - Code adapted to AVR Butterfly                 - KS
+//  20031009          port to avr-gcc/avr-libc                      - M.Thomas
+//  20070122          "updated 2006-10-10" included (from REV07)    - from Atmel
+//  20070129          SIGNAL->ISR, gLCD_Start_Scroll_Timer volatile - mt
+//
+//*****************************************************************************
 
-               Copyright (C) Dean Camera, 2008
 
-            dean [at] fourwalledcubicle [dot] com
-                  www.fourwalledcubicle.com
-*/
+// Include files.
+#include <avr/io.h>
+#include <avr/pgmspace.h>
+#include <avr/interrupt.h>
+#include <stdint.h>
+// mt - only for AUTO:
+//#include "main.h"
+// mt - for gButtonTimeout
+#include "button.h"
+#include "LCD_driver.h"
 
-/*
-   This is a basic driver for the Butterfly LCD. It offers the ability to
-   change the contrast and display strings (scrolling or static) from flash
-   or SRAM memory only.
-   
-   This has been completly rewritten from the Atmel code; in this version, as
-   much processing as possible is performed by the string display routines
-   rather than the interrupt so that the interrupt executes as fast as possible.
-*/
+#ifndef BOOL
+#define BOOL    char
+#define FALSE   0
+#define TRUE    (!FALSE)
+#endif
 
-#define INC_FROM_DRIVER
-#include "LCD_Driver.h"
+// Variable from "button.c" to prevent button-bouncing
+extern unsigned char gButtonTimeout;    
 
-//                                  LCD Text            + Nulls for scrolling + Null Termination
-static volatile char     TextBuffer[LCD_TEXTBUFFER_SIZE + LCD_DISPLAY_SIZE    + 1] = {};
-static volatile uint8_t  StrStart        = 0;
-static volatile uint8_t  StrEnd          = 0;
-static volatile uint8_t  ScrollCount     = 0;
-static volatile uint8_t  UpdateDisplay   = false;
-static volatile uint8_t  ShowColons      = false;
-       volatile uint8_t  ScrollFlags     = 0;
+volatile char gAutoPressJoystick = FALSE;
 
-const           uint16_t LCD_SegTable[] PROGMEM =
+// Used to indicate when the LCD interrupt handler should update the LCD
+// mt jw char gLCD_Update_Required = FALSE;
+volatile char gLCD_Update_Required = FALSE;
+
+// LCD display buffer (for double buffering).
+volatile char LCD_Data[LCD_REGISTER_COUNT];
+
+// Buffer that contains the text to be displayed
+// Note: Bit 7 indicates that this character is flashing
+volatile char gTextBuffer[TEXTBUFFER_SIZE];
+
+// Only six letters can be shown on the LCD.
+// With the gScroll and gScrollMode variables,
+// one can select which part of the buffer to show
+volatile signed char gScroll;
+volatile char gScrollMode;
+
+////Start-up delay before scrolling a string over the LCD
+volatile char gLCD_Start_Scroll_Timer = 0;
+
+// The gFlashTimer is used to determine the on/off
+// timing of flashing characters
+volatile char gFlashTimer = 0;
+
+// Turns on/off the colons on the LCD
+char gColon = 0;
+
+
+// Look-up table used when converting ASCII to
+// LCD display data (segment control)
+// mt __flash unsigned int LCD_character_table[] =
+unsigned int LCD_character_table[] PROGMEM =
 {
-    0xEAA8,     // '*'
+    0x0A51,     // '*' (?)
     0x2A80,     // '+'
-    0x4000,     // ','
+    0x0000,     // ',' (Not defined)
     0x0A00,     // '-'
     0x0A51,     // '.' Degree sign
-    0x4008,     // '/'
+    0x0000,     // '/' (Not defined)
     0x5559,     // '0'
     0x0118,     // '1'
     0x1e11,     // '2
@@ -49,9 +96,9 @@ const           uint16_t LCD_SegTable[] PROGMEM =
     0x1b51,     // '9'
     0x0000,     // ':' (Not defined)
     0x0000,     // ';' (Not defined)
-    0x8008,     // '<'
-    0x1A00,     // '='
-    0x4020,     // '>'
+    0x0000,     // '<' (Not defined)
+    0x0000,     // '=' (Not defined)
+    0x0000,     // '>' (Not defined)
     0x0000,     // '?' (Not defined)
     0x0000,     // '@' (Not defined)
     0x0f51,     // 'A' (+ 'a')
@@ -80,176 +127,292 @@ const           uint16_t LCD_SegTable[] PROGMEM =
     0xc028,     // 'X' (+ 'x')
     0x2028,     // 'Y' (+ 'y')
     0x5009,     // 'Z' (+ 'z')
-    0x1441,     // '['
-    0x8020,     // '\'
-    0x1111,     // ']'
+    0x0000,     // '[' (Not defined)
+    0x0000,     // '\' (Not defined)
+    0x0000,     // ']' (Not defined)
     0x0000,     // '^' (Not defined)
-    0x1000      // '_'
+    0x0000      // '_'
 };
 
-// ======================================================================================
 
-/*
- NAME:      | LCD_Init
- PURPOSE:   | Initializes the Butterfly's LCD for correct operation, ready to display data
- ARGUMENTS: | None
- RETURNS:   | None
-*/
+/*****************************************************************************
+*
+*   Function name : LCD_Init
+*
+*   Returns :       None
+*
+*   Parameters :    None
+*
+*   Purpose :       Initialize LCD_displayData buffer.
+*                   Set up the LCD (timing, contrast, etc.)
+*
+*****************************************************************************/
 void LCD_Init(void)
 {
-   // Set the initial contrast level to maximum:
-   LCD_CONTRAST_LEVEL(0x0F);
+    LCD_AllSegments(FALSE);                     // Clear segment buffer.
 
-    // Select asynchronous clock source, enable all COM pins and enable all segment pins:
-    LCDCRB  = (1<<LCDCS) | (3<<LCDMUX0) | (7<<LCDPM0);
+    LCD_CONTRAST_LEVEL(LCD_INITIAL_CONTRAST);    //Set the LCD contrast level
 
-    // Set LCD prescaler to give a framerate of 64Hz:
-    LCDFRR  = (0<<LCDPS0) | (3<<LCDCD0);   
+    // Select asynchronous clock source, enable all COM pins and enable all
+    // segment pins.
+    LCDCRB = (1<<LCDCS) | (3<<LCDMUX0) | (7<<LCDPM0);
 
-   // Enable LCD and set low power waveform, enable start of frame interrupt:
-    LCDCRA  = (1<<LCDEN) | (1<<LCDAB) | (1<<LCDIE);
+    // Set LCD prescaler to give a framerate of 32,0 Hz
+    LCDFRR = (0<<LCDPS0) | (7<<LCDCD0);    
+
+    LCDCRA = (1<<LCDEN) | (1<<LCDAB);           // Enable LCD and set low power waveform
+
+    //Enable LCD start of frame interrupt
+    LCDCRA |= (1<<LCDIE);
+
+    //updated 2006-10-10, setting LCD drive time to 1150us in FW rev 07, 
+    //instead of previous 300us in FW rev 06. Due to some variations on the LCD
+    //glass provided to the AVR Butterfly production.
+    LCDCCR |= (1<<LCDDC2) | (1<<LCDDC1) | (1<<LCDDC0);
+
+    gLCD_Update_Required = FALSE;
+
+
 }
 
-/*
- NAME:      | LCD_puts
- PURPOSE:   | Displays a string from flash onto the Butterfly's LCD
- ARGUMENTS: | Pointer to the start of the flash string
- RETURNS:   | None
-*/
-void LCD_puts_f(const char *FlashData)
-{
-   /* Rather than create a new buffer here (wasting RAM), the TextBuffer global
-      is re-used as a temp buffer. Once the ASCII data is loaded in to TextBuffer,
-      LCD_puts is called with it to post-process it into the correct format for the
-      LCD interrupt.                                                                */
 
-   strcpy_P((char*)&TextBuffer[0], FlashData);
-   LCD_puts((char*)&TextBuffer[0]);
+/*****************************************************************************
+*
+*   Function name : LCD_WriteDigit(char c, char digit)
+*
+*   Returns :       None
+*
+*   Parameters :    Inputs
+*                   c: The symbol to be displayed in a LCD digit
+*                   digit: In which digit (0-5) the symbol should be displayed
+*                   Note: Digit 0 is the first used digit on the LCD,
+*                   i.e LCD digit 2
+*
+*   Purpose :       Stores LCD control data in the LCD_displayData buffer.
+*                   (The LCD_displayData is latched in the LCD_SOF interrupt.)
+*
+*****************************************************************************/
+void LCD_WriteDigit(char c, char digit)
+{
+
+    unsigned int seg = 0x0000;                  // Holds the segment pattern
+    char mask, nibble;
+    volatile char *ptr;
+    char i;
+
+
+    if (digit > 5)                              // Skip if digit is illegal
+        return;
+
+    //Lookup character table for segmet data
+    if ((c >= '*') && (c <= 'z'))
+    {
+        // c is a letter
+        if (c >= 'a')                           // Convert to upper case
+            c &= ~0x20;                         // if necessarry
+
+        c -= '*';
+
+        //mt seg = LCD_character_table[c];
+        seg = (unsigned int) pgm_read_word(&LCD_character_table[(uint8_t)c]); 
+    }
+
+    // Adjust mask according to LCD segment mapping
+    if (digit & 0x01)
+        mask = 0x0F;                // Digit 1, 3, 5
+    else
+        mask = 0xF0;                // Digit 0, 2, 4
+
+    ptr = LCD_Data + (digit >> 1);  // digit = {0,0,1,1,2,2}
+
+    for (i = 0; i < 4; i++)
+    {
+        nibble = seg & 0x000F;
+        seg >>= 4;
+        if (digit & 0x01)
+            nibble <<= 4;
+        *ptr = (*ptr & mask) | nibble;
+        ptr += 5;
+    }
 }
 
-/*
- NAME:      | LCD_puts
- PURPOSE:   | Displays a string from SRAM onto the Butterfly's LCD
- ARGUMENTS: | Pointer to the start of the SRAM string
- RETURNS:   | None
-*/
-void LCD_puts(const char *Data)
+
+
+/*****************************************************************************
+*
+*   Function name : LCD_AllSegments(unsigned char input)
+*
+*   Returns :       None
+*
+*   Parameters :    show -  [TRUE;FALSE]
+*
+*   Purpose :       shows or hide all all LCD segments on the LCD
+*
+*****************************************************************************/
+void LCD_AllSegments(char show)
 {
-   uint8_t LoadB       = 0;
-   uint8_t CurrByte;
+    unsigned char i;
 
-   do
-   {
-      CurrByte = *(Data++);
-      
-      switch (CurrByte)
-      {
-         case 'a'...'z':
-            CurrByte &= ~(1 << 5);                   // Translate to upper-case character
-         case '*'...'_':                                // Valid character, load it into the array
-            TextBuffer[LoadB++] = (CurrByte - '*');
-            break;
-         case 0x00:                                   // Null termination of the string - ignore for now so the nulls can be appended below
-            break;
-         default:                                     // Space or invalid character, use 0xFF to display a blank
-            TextBuffer[LoadB++] = LCD_SPACE_OR_INVALID_CHAR;
-      }
-   }
-   while (CurrByte && (LoadB < LCD_TEXTBUFFER_SIZE));
+    if (show)
+        show = 0xFF;
 
-   ScrollFlags = ((LoadB > LCD_DISPLAY_SIZE)? LCD_FLAG_SCROLL : 0x00);
-
-   for (uint8_t Nulls = 0; Nulls < 7; Nulls++)
-     TextBuffer[LoadB++] = LCD_SPACE_OR_INVALID_CHAR;  // Load in nulls to ensure that when scrolling, the display clears before wrapping
-   
-   TextBuffer[LoadB] = 0x00;                           // Null-terminate string
-   
-   StrStart      = 0;
-   StrEnd        = LoadB;
-   ScrollCount   = LCD_SCROLLCOUNT_DEFAULT + LCD_DELAYCOUNT_DEFAULT;
-   UpdateDisplay = true;
+    // Set/clear all bits in all LCD registers
+    for (i=0; i < LCD_REGISTER_COUNT; i++)
+        *(LCD_Data + i) = show;
 }
 
-/*
- NAME:      | LCD_vect (ISR, blocking)
- PURPOSE:   | ISR to handle the display and scrolling of the current display string onto the LCD
- ARGUMENTS: | None
- RETURNS:   | None
-*/
-ISR(LCD_vect, ISR_NOBLOCK)
+
+/*****************************************************************************
+*
+*   LCD Interrupt Routine
+*
+*   Returns :       None
+*
+*   Parameters :    None
+*
+*   Purpose: Latch the LCD_displayData and Set LCD_status.updateComplete
+*
+*****************************************************************************/
+
+ISR(LCD_vect)
 {
-   if (ScrollFlags & LCD_FLAG_SCROLL)
-   {
-      if (!(ScrollCount--))
-      {
-         UpdateDisplay = true;
-         ScrollCount   = LCD_SCROLLCOUNT_DEFAULT;
-      }
-   }
+    static char LCD_timer = LCD_TIMER_SEED;
+    char c;
+    char c_flash;
+    char flash;
 
-   if (UpdateDisplay)
-   {
-      for (uint8_t Character = 0; Character < LCD_DISPLAY_SIZE; Character++)
-      {
-         uint8_t Byte = (StrStart + Character);
+    char EOL;
+    unsigned char i;
 
-         if (Byte >= StrEnd)
-           Byte -= StrEnd;
-         
-         LCD_WriteChar(TextBuffer[Byte], Character);
-      }
-      
-      if ((StrStart + LCD_DISPLAY_SIZE) == StrEnd)    // Done scrolling message on LCD once
-        ScrollFlags |= LCD_FLAG_SCROLL_DONE;
-      
-      if (StrStart++ == StrEnd)
-        StrStart     = 1;
+    static char timeout_count;
+    static char auto_joystick_count;
 
-       if (ShowColons)
-            *((uint8_t*)(LCD_LCDREGS_START + 8)) = 0x01;
+    c_flash=0; // mt
+    
+/**************** Button timeout for the button.c, START ****************/
+/*    if(!gButtonTimeout)
+    {
+        timeout_count++;
+        
+        if(timeout_count > 3)
+        {
+            gButtonTimeout = TRUE;
+            timeout_count = 0;
+        }
+    }
+*/
+/**************** Button timeout for the button.c, END ******************/
+
+/**************** Auto press joystick for the main.c, START *************/
+	char AUTO = 1; 
+    if(gAutoPressJoystick == AUTO)
+    {
+        auto_joystick_count++;
+        
+        if(auto_joystick_count > 16)
+        {
+            gAutoPressJoystick = TRUE;
+            auto_joystick_count = 15;
+        }
+    }
+    else
+        auto_joystick_count = 0;
+
+
+/**************** Auto press joystick for the main.c, END ***************/    
+
+    LCD_timer--;                    // Decreased every LCD frame
+
+    if (gScrollMode)
+    {
+        // If we are in scroll mode, and the timer has expired,
+        // we will update the LCD
+        if (LCD_timer == 0)
+        {
+            if (gLCD_Start_Scroll_Timer == 0)
+            {
+                gLCD_Update_Required = TRUE;
+            }
+            else
+                gLCD_Start_Scroll_Timer--;
+        }
+    }
+    else    
+    {   // if not scrolling,
+        // disble LCD start of frame interrupt
+        // cbi(LCDCRA, LCDIE);   //DEBUG
+        gScroll = 0;
+    }
+
+
+    EOL = FALSE;
+    if (gLCD_Update_Required == TRUE)
+    {
+        // Duty cycle of flashing characters
+        if (gFlashTimer < (LCD_FLASH_SEED >> 1))
+            flash = 0;
         else
-            *((uint8_t*)(LCD_LCDREGS_START + 8)) = 0x00;
+            flash = 1;
 
-      UpdateDisplay  = false;                         // Clear LCD management flags, LCD update is complete
-   }
-}
+        // Repeat for the six LCD characters
+        for (i = 0; i < 6; i++)
+        {
+            if ((gScroll+i) >= 0 && (!EOL))
+            {
+                // We have some visible characters
+                c = gTextBuffer[i + gScroll];
+                c_flash = c & 0x80 ? 1 : 0;
+                c = c & 0x7F;
 
-/*
- NAME:      | LCD_WriteChar (static, inline)
- PURPOSE:   | Routine to write a character to the correct LCD registers for display
- ARGUMENTS: | Character to display, LCD character number to display character on
- RETURNS:   | None
-*/
-static inline void LCD_WriteChar(const uint8_t Byte, const uint8_t Digit)
-{
-   uint8_t* BuffPtr = (uint8_t*)(LCD_LCDREGS_START + (Digit >> 1));
-   uint16_t SegData = 0x0000;
+                if (c == '\0')
+                    EOL = i+1;      // End of character data
+            }
+            else
+                c = ' ';
 
-   if (Byte != LCD_SPACE_OR_INVALID_CHAR)              // Null indicates invalid character or space
-     SegData = pgm_read_word(&LCD_SegTable[Byte]);   
+            // Check if this character is flashing
 
-   for (uint8_t BNib = 0; BNib < 4; BNib++)
-   {
-      uint8_t MaskedSegData = (SegData & 0x0000F);
+            if (c_flash && flash)
+                LCD_WriteDigit(' ', i);
+            else
+                LCD_WriteDigit(c, i);
+        }
 
-      if (Digit & 0x01)
-        *BuffPtr = ((*BuffPtr & 0x0F) | (MaskedSegData << 4));
-      else
-        *BuffPtr = ((*BuffPtr & 0xF0) | MaskedSegData);
+        // Copy the segment buffer to the real segments
+        for (i = 0; i < LCD_REGISTER_COUNT; i++)
+            *(pLCDREG + i) = *(LCD_Data+i);
 
-      BuffPtr += 5;
-      SegData >>= 4;
-   }   
-}
+        // Handle colon
+        if (gColon)
+            *(pLCDREG + 8) = 0x01;
+        else
+            *(pLCDREG + 8) = 0x00;
 
-/*
- NAME:      | LCD_ShowColons
- PURPOSE:   | Routine to turn on or off the LCD's colons
- ARGUMENTS: | Boolean - true to turn on colons
- RETURNS:   | None
-*/
-void LCD_ShowColons(const uint8_t ColonsOn)
-{
-   ShowColons    = ColonsOn;
-   UpdateDisplay = true;
+        // If the text scrolled off the display,
+        // we have to start over again.
+        if (EOL == 1)
+            gScroll = -6;
+        else
+            gScroll++;
+
+        // No need to update anymore
+        gLCD_Update_Required = FALSE;
+    }
+
+
+    // LCD_timer is used when scrolling text
+    if (LCD_timer == 0)
+    {
+/*        if ((gScroll <= 0) || EOL)
+            LCD_timer = LCD_TIMER_SEED/2;
+        else*/
+            LCD_timer = LCD_TIMER_SEED;
+    }
+
+    // gFlashTimer is used when flashing characters
+    if (gFlashTimer == LCD_FLASH_SEED)
+        gFlashTimer= 0;
+    else
+        gFlashTimer++;
+
 }

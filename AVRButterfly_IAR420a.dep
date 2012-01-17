@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<project>
+  <fileVersion>2</fileVersion>
+  <configuration>
+    <name>Debug</name>
+    <outputs>
+      <file>$PROJ_DIR$\BCD.c</file>
+      <file>$PROJ_DIR$\ADC.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\LCD_driver.pbi</file>
+      <file>$PROJ_DIR$\iom169.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\button.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\dataflash.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\comp_a90.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\BCD.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\RTC.pbi</file>
+      <file>$PROJ_DIR$\lnkm169s.xcl</file>
+      <file>$PROJ_DIR$\Debug\Obj\sound.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\usart.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\test.h</file>
+      <file>$PROJ_DIR$\LCD_driver.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\timer0.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\vcard.r90</file>
+      <file>$PROJ_DIR$\button.c</file>
+      <file>$TOOLKIT_DIR$\lib\clib\cl3s-ec_mul-sf.r90</file>
+      <file>$PROJ_DIR$\BCD.h</file>
+      <file>$PROJ_DIR$\main.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\dataflash.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\eeprom.r90</file>
+      <file>$PROJ_DIR$\menu.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\vcard.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\button.r90</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\LCD_functions.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\BCD.r90</file>
+      <file>$PROJ_DIR$\usart.h</file>
+      <file>$PROJ_DIR$\vcard.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\ADC.r90</file>
+      <file>$PROJ_DIR$\ADC.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\AVRButterfly_IAR420a.pbd</file>
+      <file>$PROJ_DIR$\Debug\Obj\test.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\test.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\sound.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\RTC.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.r90</file>
+      <file>$PROJ_DIR$\RTC.h</file>
+      <file>$PROJ_DIR$\Debug\Exe\AVRButterfly_IAR420a.d90</file>
+      <file>$PROJ_DIR$\Debug\Obj\usart.pbi</file>
+      <file>$PROJ_DIR$\sound.h</file>
+      <file>$TOOLKIT_DIR$\inc\inavr.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\LCD_functions.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\eeprom.pbi</file>
+      <file>$PROJ_DIR$\main.c</file>
+      <file>$PROJ_DIR$\RTC.c</file>
+      <file>$PROJ_DIR$\sound.c</file>
+      <file>$PROJ_DIR$\test.c</file>
+      <file>$PROJ_DIR$\timer0.c</file>
+      <file>$PROJ_DIR$\usart.c</file>
+      <file>$PROJ_DIR$\vcard.c</file>
+      <file>$PROJ_DIR$\timer0.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\ADC.pbi</file>
+      <file>$PROJ_DIR$\eeprom.h</file>
+      <file>$PROJ_DIR$\dataflash.h</file>
+      <file>$PROJ_DIR$\button.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\LCD_driver.r90</file>
+      <file>$PROJ_DIR$\LCD_functions.h</file>
+      <file>$TOOLKIT_DIR$\inc\ina90.h</file>
+      <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\timer0.pbi</file>
+      <file>$PROJ_DIR$\dataflash.c</file>
+      <file>$PROJ_DIR$\eeprom.c</file>
+      <file>$PROJ_DIR$\LCD_driver.c</file>
+      <file>$PROJ_DIR$\LCD_functions.c</file>
+    </outputs>
+    <file>
+      <name>$PROJ_DIR$\BCD.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 28</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 7</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\ADC.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 31</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 54</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 43 26 3 61 20 32 19 59 53</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 43 26 3 61 20 32 19 59 53</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\button.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 25</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 4</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 43 26 3 61 20 57 53</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 43 26 3 61 20 57 53</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Obj\AVRButterfly_IAR420a.pbd</name>
+      <inputs>
+        <tool>
+          <name>BILINK</name>
+          <file> 54 7 2 44 8 4 5 45 12 10 34 62 41 24</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\Debug\Exe\AVRButterfly_IAR420a.d90</name>
+      <inputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 9 31 28 58 27 37 25 21 22 38 36 35 15 11 16 18</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 40</file>
+        </tool>
+      </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\main.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 38</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 12</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 43 26 3 61 20 59 14 57 39 53 19 29 42 32 56 13 30 23</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 43 26 3 61 20 59 14 57 39 53 19 29 42 32 56 13 30 23</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\RTC.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 37</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 8</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 43 26 3 61 20 39 59 19</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 43 26 3 61 20 39 59 19</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\sound.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 36</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 10</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 43 26 3 61 20 42 53 59</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 43 26 3 61 20 42 53 59</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\test.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 35</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 34</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 43 26 3 61 20 13 57 14 59 42 32 39 56</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 43 26 3 61 20 13 57 14 59 42 32 39 56</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\timer0.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 15</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 62</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 43 26 3 61 20 53</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 43 26 3 61 20 53</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\usart.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 11</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 41</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 43 26 3 61 20 29</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 43 26 3 61 20 29</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\vcard.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 16</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 24</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 43 26 3 61 20 57 59 29 55 30</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 43 26 3 61 20 57 59 29 55 30</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\dataflash.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 21</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 5</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 60 43 26 6 3 61 56</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\eeprom.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 22</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 45</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 43 26 55</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 43 26 55</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\LCD_driver.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 58</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 2</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 3 61 14 20</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 3 61 14 20</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\LCD_functions.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 27</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 44</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 3 61 20 14 59 19</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 3 61 20 14 59 19</file>
+        </tool>
+      </inputs>
+    </file>
+  </configuration>
+  <configuration>
+    <name>Release</name>
+    <outputs/>
+    <forcedrebuild>
+      <name>[MULTI_TOOL]</name>
+      <tool>XLINK</tool>
+    </forcedrebuild>
+  </configuration>
+</project>
+
+

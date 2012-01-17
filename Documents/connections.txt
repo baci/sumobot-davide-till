@@ -8,7 +8,7 @@ PB5	yellow	P9	X5	Line Sensor Input (L)
 PB6	black	P7	X4	Line Sensor Power (R)
 PB7	blue	P8	X4	Line Sensor Input (R)
 
-PD0	blue	P13	X7	Servo Actor (L)
-PD1	blue	P12	X6	Servo Actor (R)
+PD5	blue	P13	X7	Servo Actor (L)		OC1A
+PD6	blue	P12	X6	Servo Actor (R)		OC1B
 PD8				Ground
-PD9				Power
+PD9				Voltage

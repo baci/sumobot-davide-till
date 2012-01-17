@@ -1,48 +1,67 @@
-/*
-               BUTTLCD -- Butterfly LCD Driver
+//*****************************************************************************
+//
+//  File........: LCD_Driver.h
+//
+//  Author(s)...: ATMEL Norway
+//
+//  Target(s)...: ATmega169
+//
+//  Description.: Defines and prototypes for LCD_Driver.c
+//
+//  Revisions...: 1.0
+//
+//  YYYYMMDD - VER. - COMMENT                                       - SIGN.
+//
+//  20020606 - 0.10 - File created                                  - RM
+//  20021010 - 1.0  - Clean up                                      - JLL
+//  20031009          port to avr-gcc/avr-libc                      - M.Thomas
+//  20070129          LCD_CONTRAST_LEVEL from Atmel's REV07-code    - mt
+//
+//*****************************************************************************
 
-               Copyright (C) Dean Camera, 2008
 
-            dean [at] fourwalledcubicle [dot] com
-                  www.fourwalledcubicle.com
-*/
+/************************************************************************/
+// Definitions
+/************************************************************************/
+#define LCD_INITIAL_CONTRAST    0x0F
+#define LCD_TIMER_SEED		    3
+#define LCD_FLASH_SEED          10
+#define LCD_REGISTER_COUNT      20
+#define TEXTBUFFER_SIZE         25
 
-#ifndef LCDDRIVER_H
-#define LCDDRIVER_H
+#define SCROLLMODE_ONCE         0x01
+#define SCROLLMODE_LOOP         0x02
+#define SCROLLMODE_WAVE         0x03
 
-   // INCLUDES:
-   #include <avr/io.h>
-   #include <avr/pgmspace.h>
-   #include <avr/interrupt.h>
-   #include <stdbool.h>
-   
-   // EXTERNAL VARIABLES:
-   extern volatile uint8_t ScrollFlags;
-   
-   // DEFINES:
-   #define LCD_LCDREGS_START          ((uint8_t*)&LCDDR0)
-   #define LCD_SPACE_OR_INVALID_CHAR  0xFF
-   
-   #define LCD_CONTRAST_LEVEL(level)  do{ LCDCCR = (0x0F & level); }while(0)
-   #define LCD_WAIT_FOR_SCROLL_DONE() do{ while (!(ScrollFlags & LCD_FLAG_SCROLL_DONE)) {} }while(0)
-   
-   #define LCD_SCROLLCOUNT_DEFAULT    6
-   #define LCD_DELAYCOUNT_DEFAULT     20
-   #define LCD_TEXTBUFFER_SIZE        20
-   #define LCD_SEGBUFFER_SIZE         19
-   #define LCD_DISPLAY_SIZE           6
+/************************************************************************/
+//MACROS
+/************************************************************************/
+//active = [TRUE;FALSE]
+#define LCD_SET_COLON(active) LCD_Data[8] = active
 
-   #define LCD_FLAG_SCROLL            (1 << 0)
-   #define LCD_FLAG_SCROLL_DONE       (1 << 1)   
+// DEVICE SPECIFIC!!! (ATmega169)
+#define pLCDREG ((unsigned char *)(0xEC))
 
-   // PROTOTYPES:
-   void LCD_puts_f(const char *FlashData);
-   void LCD_puts(const char *Data);
-   void LCD_Init(void);
-   void LCD_ShowColons(const uint8_t ColonsOn);
-   
-   #if defined(INC_FROM_DRIVER)
-     static inline void LCD_WriteChar(const uint8_t Byte, const uint8_t Digit);
-   #endif
+// DEVICE SPECIFIC!!! (ATmega169) First LCD segment register
+#define LCD_CONTRAST_LEVEL(level) LCDCCR=((LCDCCR&0xF0)|(0x0F & level))
 
-#endif 
+
+/************************************************************************/
+// Global variables
+/************************************************************************/
+// mt: volatiles added (based on jw patch)
+extern volatile char gLCD_Update_Required;
+// mt: extern char LCD_Data[LCD_REGISTER_COUNT];
+extern volatile char gTextBuffer[TEXTBUFFER_SIZE];
+extern volatile char gScrollMode;
+extern volatile char gFlashTimer;
+extern char gColon;
+extern volatile signed char gScroll;
+extern volatile char gAutoPressJoystick;
+
+/************************************************************************/
+// Global functions
+/************************************************************************/
+void LCD_Init (void);
+void LCD_WriteDigit(char input, char digit);
+void LCD_AllSegments(char show);
