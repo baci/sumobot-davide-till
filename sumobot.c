@@ -19,7 +19,8 @@ int main(void)
 	motorInit();
 	
 
-	setMotorSpeed(750, 750);
+	setMotorSpeed(1, 850);
+	setMotorSpeed(2, 650);
 
 	while(1){
 		LCD_puts("Hello fucker", 0);		
@@ -30,10 +31,10 @@ int main(void)
 
 /* sets the speed of the left and right motor, no movement is 750 - remember that the right motor 
 is mirrowed to the left */
-void setMotorSpeed(int left, int right)
+void setMotorSpeed(int motor, int speed)
 {
 	cli();
-	OCR1A = left;
-	OCR1B = right;
+	if(motor==1)		OCR1B = speed;
+	else if (motor==2) 	OCR1A = speed;
 	sei();
 }
