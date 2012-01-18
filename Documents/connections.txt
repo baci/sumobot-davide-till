@@ -10,5 +10,6 @@ PB7	yellow	P9	X5	Line Sensor Input (L)
 
 PD0	red	P4	X8	Infrared Actor (L)
 PD1	black	P15	X9	Infrared Actor (R)
+PD2				Line Sensor Input (Back)
 PD8				Ground
 PD9				Voltage
