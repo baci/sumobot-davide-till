@@ -4,14 +4,21 @@
 	This file initializes all the registers that the robot needs for moving
 
 */
+#ifndef _INIT
+#define _INIT
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-void motorInit();
-void delayInit();
+#define NO_MOVE 		750		// no movement of a motor
+#define SLOW_FWD		50		// minimum forward
+#define FAST_FWD		250		// maximum forward
+#define SLOW_BWD		-50		// min backward
+#define FAST_BWD		-250	// max backward
+#define LEFT 			OCR1B	// left motor
+#define RIGHT			OCR1A	// right motor
+
 
 struct _State{
 	int leftMotor;
@@ -19,30 +26,11 @@ struct _State{
 	int isStopped;
 };
 
-struct _Emitter{
-	int leftOut;
-	int rightOut;
-	int durationOut;
-};
-
-typedef struct _Detector{
-	int leftIn;
-	int backIn;
-	int rightIn;
-	int durationIn;
-};
-
 typedef struct _State State;
-typedef struct _Emitter Emitter;
-typedef struct _Detector Detector;
 
 State *state;
-Emitter *emitter;
-Detector *detector;
 
 State StateInit();
-Emitter EmitterInit();
-Detector DetectorInit();
 
 void delayInit()
 {
@@ -70,8 +58,8 @@ void motorInit(){
 	TIMSK1|=1<<TOIE1; // Timer/counter1 overflow interrupt enable 
 
 	// initial
-	OCR1A = 750;
-	OCR1B = 750;
+	LEFT = NO_MOVE;
+	RIGHT = NO_MOVE;
 
 	SREG|=1<<SREG_I; // global enable interrupts
 
@@ -90,37 +78,4 @@ State StateInit(){
 	return *state;
 }
 
-
-Emitter EmitterInit()
-{
-	emitter = (Emitter *)malloc(sizeof(Emitter));
-	
-	if(!emitter){
-		emitter->leftOut = 0;
-		emitter->rightOut = 0;
-		emitter->durationOut = 0;
-	}
-
-	DDRD |= 1<<PD0 | 1<<PD1; // initialize output left/right
-	
-	return *emitter;
-}
-
-Detector DetectorInit()
-{
-	detector = (Detector *)malloc(sizeof(Detector));
-
-	if(!detector){
-		detector->leftIn = 0;
-		detector->backIn = 0;
-		detector->rightIn = 0;
-		detector->durationIn = 0;
-	}
-	
-	DDRB  &= ~(1<<PB0) & ~(1<<PB1); 	// initialize input left/right
-	DDRD  &= ~(1<<PD2); 			// -//- back
-	PORTB |= 1<<PB0 | 1<<PB1;
-	PORTD |= 1<<PD2;
-	
-	return *detector;
-}
+#endif
