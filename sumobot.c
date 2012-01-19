@@ -32,9 +32,6 @@ int main(void)
 
 	while(1){
 		LCD_puts("running", 0);
-
-		
-		
 	}
 
 	return 0;
