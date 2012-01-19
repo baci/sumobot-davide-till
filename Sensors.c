@@ -2,11 +2,11 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "Sensors.h"
+//#include "time.h"
 
 // sensor=1: left, sensor=2: right
 int readLineSensor(int _sensor)
 {
-	int temp=0;
 	int ret = -1;
 	
 	int sensorIn = (_sensor==1)?LEFT_LINE_IN:RIGHT_LINE_IN;
@@ -16,7 +16,7 @@ int readLineSensor(int _sensor)
 	PORTB |= 1<<sensorIn | 1<<sensorPower; 	// set both to HIGH
 	
 	// pause 1ms
-	while(temp<2222) temp++;
+	delayMs(1);
 
 	DDRB &= ~(1<<sensorIn); 				// read mode for In
 	ret = PINB & (1 << sensorIn); 			// read from sensor

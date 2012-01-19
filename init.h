@@ -32,14 +32,6 @@ State *state;
 
 State StateInit();
 
-void delayInit()
-{
-   OCR2A = 0x1E84;           //Set OCR1A
-   //Timer counter control register
-   TCCR2A = (1 << CS22)|(0 << CS21)|(1 << CS20) | (1 << WGM21)|(1 << WGM20);   // WGM1=4, prescale at 1024
-   TIMSK2 |= (1 << OCIE2A);         //Set bit 6 in TIMSK to enable Timer 2 compare interrupt. 
-}
-
 void motorInit(){
 
 	/************** MOTOR TIMERS INITIALIZATION *****************/

@@ -3,7 +3,7 @@ PB0	blue	P11	X8	Infrared Sensor (R)
 PB1	yellow	P14	X9	Infrared Sensor (L)
 PB2	black	P7	X4	Line Sensor Power (R)
 PB3	blue	P8	X4	Line Sensor Input (R)
-PB4	blue	P10	X5	Line Sensor Power (L)
+PB4	blue	P10	X5	Line Sensor Power (L)	OC0A -> conflict!
 PB5	blue	P12	X6	Servo Actor (R)		OC1A
 PB6	blue	P13	X7	Servo Actor (L)		OC1B
 PB7	yellow	P9	X5	Line Sensor Input (L)

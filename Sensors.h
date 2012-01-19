@@ -1,8 +1,6 @@
 #ifndef _SENSORS
 #define _SENSORS
 
-#include "init.h"
-
 #define LEFT_LINE_POWER		PB4
 #define RIGHT_LINE_POWER	PB2
 #define LEFT_LINE_IN		PB7
@@ -38,5 +36,7 @@ int readLineSensor(int _sensor);
 Emitter EmitterInit();
 Detector DetectorInit();
 LineSensor LineSensorInit();
+
+
 
 #endif
