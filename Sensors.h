@@ -10,23 +10,19 @@ typedef struct _Emitter{
 	int leftOut;
 	int rightOut;
 	int durationOut;
-};
+} Emitter;
 
 typedef struct _Detector{
 	int leftIn;
 	int backIn;
 	int rightIn;
 	int durationIn;
-};
+} Detector;
 
 typedef struct _LineSensor{
 	int leftIn;
 	int rightIn;
-};
-
-typedef struct _Emitter Emitter;
-typedef struct _Detector Detector;
-typedef struct _LineSensor LineSensor;
+} LineSensor;
 
 Emitter *emitter;
 Detector *detector;

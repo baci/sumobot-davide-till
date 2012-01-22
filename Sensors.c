@@ -1,9 +1,7 @@
 #include <stdlib.h>
 #include <avr/io.h>
-#include <avr/interrupt.h>
 #include "Sensors.h"
 #include "time_correct.h"
-//#include "time.h"
 
 // sensor=1: left, sensor=2: right
 int readLineSensor(int _sensor)

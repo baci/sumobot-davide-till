@@ -1,36 +1,6 @@
-/*
-	Authors: Davide Berdin, Till Riemer
-	
-	This file initializes all the registers that the robot needs for moving
-
-*/
-#ifndef _INIT
-#define _INIT
-
-#include <stdlib.h>
 #include <avr/io.h>
-#include <avr/interrupt.h>
-
-#define NO_MOVE 		750		// no movement of a motor
-#define SLOW_FWD		50		// minimum forward
-#define FAST_FWD		250		// maximum forward
-#define SLOW_BWD		-50		// min backward
-#define FAST_BWD		-250	// max backward
-#define LEFT 			OCR1B	// left motor
-#define RIGHT			OCR1A	// right motor
-
-
-struct _State{
-	int leftMotor;
-	int rightMotor;
-	int isStopped;
-};
-
-typedef struct _State State;
-
-State *state;
-
-State StateInit();
+#include <stdlib.h>
+#include "servos.h"
 
 void motorInit(){
 
@@ -61,7 +31,7 @@ void motorInit(){
 State StateInit(){
 	state = (State *)malloc(sizeof(State));
 
-	if(state == NULL){
+	if(!state){
 		state->leftMotor = 0;
 		state->rightMotor = 0;
 		state->isStopped = 1;
@@ -69,5 +39,3 @@ State StateInit(){
 
 	return *state;
 }
-
-#endif
