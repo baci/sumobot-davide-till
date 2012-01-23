@@ -1,6 +1,5 @@
 /*
 	Authors: Davide Berdin, Till Riemer
-
 */
 
 #include <stdlib.h>
@@ -23,15 +22,25 @@ int main(void){
 	//*detector = DetectorInit();
 	
 	initialize_time();
-
+	
 	LCD_puts("hello",0);
 	delay(1000);
 	LCD_Clear();
 	LCD_puts("world",0);
 	delay(2000);
 	
-	while(1);
+	setMotorSpeed(100, 100);
 
+	while(1){
+		if(readLineSensor(1)){
+			setMotorSpeed(100, 0);
+			delay(1000);
+		}
+		if(readLineSensor(2)){
+			setMotorSpeed(0, 100);
+			delay(1000);
+		}
+	}
 	return 0;
 }
 

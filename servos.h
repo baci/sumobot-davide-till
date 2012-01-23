@@ -1,7 +1,5 @@
 /*
 	Authors: Davide Berdin, Till Riemer
-	
-
 */
 #ifndef _INIT
 #define _INIT
