@@ -47,6 +47,7 @@ ISR(TIMER0_COMP_vect){
 	msecs++;
 }
 
+// returns passed ms since last start_timer() call
 static volatile uint32_t get_sys_ms(){
 	static volatile uint32_t retval = 0;
 	cli();

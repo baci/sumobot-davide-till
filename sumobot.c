@@ -16,10 +16,10 @@ void setMotorSpeed(int, int);
 
 int main(void){
 	LCD_Init();
-	//motorInit();
-	//*state = StateInit();
-	//*emitter = EmitterInit();
-	//*detector = DetectorInit();
+	motorInit();
+	*state = StateInit();
+	*emitter = EmitterInit();
+	*detector = DetectorInit();
 	
 	initialize_time();
 	
@@ -28,15 +28,15 @@ int main(void){
 	LCD_Clear();
 	LCD_puts("world",0);
 	delay(2000);
-	
+
 	setMotorSpeed(100, 100);
 
 	while(1){
-		if(readLineSensor(1)){
+		if(!readLineSensor(1)){ // line at left
 			setMotorSpeed(100, 0);
 			delay(1000);
 		}
-		if(readLineSensor(2)){
+		if(!readLineSensor(2)){ // line at right
 			setMotorSpeed(0, 100);
 			delay(1000);
 		}
