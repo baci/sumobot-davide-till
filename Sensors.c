@@ -2,35 +2,58 @@
 #include <avr/io.h>
 #include "Sensors.h"
 #include "timer.h"
+#include "lcd_functions.h"
 
-// sensor=1: left, sensor=2: right
-int readLineSensor(int _sensor)
+void readLineSensorLeft()
 {
-	int ret = -1;
-	
-	int sensorIn = (_sensor==1)?LEFT_LINE_IN:RIGHT_LINE_IN;
-	int sensorPower = (_sensor==1)?LEFT_LINE_POWER:RIGHT_LINE_POWER;
+	int leftValue = -1;
+	int lowLeft = 0;
 
-	DDRB |= 1<<sensorIn | 1<<sensorPower; 	// write mode
-	PORTB |= 1<<sensorIn | 1<<sensorPower; 	// set both to HIGH
+	int sensorInLeft = LEFT_LINE_IN;
+	int sensorPowerLeft = LEFT_LINE_POWER;
+
+	DDRB |= 1<<sensorInLeft | 1<<sensorPowerLeft; 	// write mode
+	PORTB |= 1<<sensorInLeft | 1<<sensorPowerLeft; 	// set both to HIGH
 	
 	// pause 1ms
 	TimerWait(1);
 
-	DDRB &= ~(1<<sensorIn); 				// read mode for In
-	ret = PINB & (1 << sensorIn); 			// read from sensor
-	PORTB &= ~(1<<sensorPower); 			// deactivate sensor
+	DDRB &= ~(1<<sensorInLeft); 				// read mode for In
+	leftValue = PINB & (1 << sensorInLeft); 			// read from sensor
+	PORTB &= ~(1<<sensorPowerLeft); 			// deactivate sensor
 
+	if(leftValue == 0)
+		lowLeft++;
+}
+
+int readLineSensorRight()
+{
+	int rightValue = -1;
+	int lowRight = 0;
+		
+	int sensorInRight = RIGHT_LINE_IN;
+	int sensorPowerRight = RIGHT_LINE_POWER;
+
+	DDRB |= 1<<sensorInRight | 1<<sensorPowerRight; 	// write mode
+	PORTB |= 1<<sensorInRight | 1<<sensorPowerRight; 	// set both to HIGH
 	
+	// pause 1ms
+	TimerWait(1);
 
-	/*if(_sensor==1)
-		return GetADC(LEFT_LINE_IN);
-	else if (_sensor==2)
-		return GetADC(RIGHT_LINE_IN);
-	else
-		return -1;
-	*/
-	return ret;
+	DDRB &= ~(1<<sensorInRight); 				// read mode for In
+	rightValue = PINB & (1 << sensorInRight); 			// read from sensor
+	PORTB &= ~(1<<sensorPowerRight); 			// deactivate sensor
+
+	if(rightValue == 0)
+		lowRight++;
+}
+
+void TurnBot(int lowLeft, int lowRight){
+	if(lowLeft > lowRight)
+		setMotorSpeed(100, 0);
+	else if(lowLeft < lowRight)
+			setMotorSpeed(0, 100);
+	else setMotorSpeed(100, 100);
 }
 
 Emitter EmitterInit()
@@ -69,7 +92,16 @@ Detector DetectorInit()
 
 LineSensor LineSensorInit()
 {
+	lineSensor = (LineSensor *)malloc(sizeof(LineSensor));
+
+	if(!lineSensor){
+		lineSensor->leftIn = 0;
+		lineSensor->rightIn = 0;
+	}
+	
 	DDRB &= ~0x88; // clear input bits for line sensors (PB3/7)
+
+	return *lineSensor;
 }
 
 /* sets up the Analog-to-Digital Converter (ADC) */

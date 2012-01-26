@@ -39,15 +39,9 @@ int main(void){
 	*detector = DetectorInit();
 	
 	while(1){
-		setMotorSpeed(100,100);
-		if(readLineSensor(1)){ // line at left
-			setMotorSpeed(100, 0);
-			TimerWait(1000);
-		}
-		if(readLineSensor(2)){ // line at right
-			setMotorSpeed(0, 100);
-			TimerWait(1000);
-		}
+		readLineSensorRight();
+		readLineSensorLeft();
+		TurnBot();
 	}
 	return 0;
 }
