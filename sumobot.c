@@ -13,34 +13,41 @@
 #include "LCD_functions.h"
 #include "timer.h"
 
+#define STOP 		setMotorSpeed(0,0)
+#define FWD_SLOW	setMotorSpeed(20,20)
+#define FWD_FAST	setMotorSpeed(255,255)
+#define BWD_SLOW	setMotorSpeed(x,x)
+#define BWD_FAST	setMotorSpeed(x,x)
+#define LEFT_SHARP	setMotorSpeed(100,0)
+#define LEFT_SLOW	setMotorSpeed(100,50)
+#define RIGHT_SHARP	setMotorSpeed(0,100)
+#define RIGHT_SLOW	setMotorSpeed(50,100)
+#define TURN_LEFT	setMotorSpeed(x,100)
+#define	TURN_RIGHT	setMotorSpeed(100,x)
+
 void setMotorSpeed(int, int);
 
 int main(void){
 	LCD_Init();
 	motorInit();
-	//LineSensorInit();
+	LineSensorInit();
 
 	InitTimer();
 
 	*state = StateInit();
-	//*emitter = EmitterInit();
-	//*detector = DetectorInit();
+	*emitter = EmitterInit();
+	*detector = DetectorInit();
 	
 	while(1){
-		setMotorSpeed(100, 100);
-		TimerWait(2000);
-		setMotorSpeed(0, 0);
-		TimerWait(2000);
-	}
-	/*{
-		if(!readLineSensor(1)){ // line at left
+		setMotorSpeed(100,100);
+		if(readLineSensor(1)){ // line at left
 			setMotorSpeed(100, 0);
-			delay(1000);
+			TimerWait(1000);
 		}
-		if(!readLineSensor(2)){ // line at right
+		if(readLineSensor(2)){ // line at right
 			setMotorSpeed(0, 100);
-			delay(1000);
+			TimerWait(1000);
 		}
-	}*/
+	}
 	return 0;
 }

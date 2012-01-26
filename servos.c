@@ -56,10 +56,10 @@ void SetLeftMotorPWM(int pwm)
 	if (pwm == 0) LStop();
 	else
 	{
-		if (pwm >= 0)LRev();
+		if (pwm >= 0)LFwd();
 		else
 		{
-			LFwd();
+			LRev();
 			pwm = -pwm;
 		}
 		if (pwm > 255)pwm = 255;

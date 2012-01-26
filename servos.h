@@ -4,14 +4,6 @@
 #ifndef _INIT
 #define _INIT
 
-#define NO_MOVE 		750		// no movement of a motor
-#define SLOW_FWD		50		// minimum forward
-#define FAST_FWD		250		// maximum forward
-#define SLOW_BWD		-50		// min backward
-#define FAST_BWD		-250	// max backward
-#define LEFT 			OCR1B	// left motor
-#define RIGHT			OCR1A	// right motor
-
 /* PB6 controls left motor direction (forward/reverse) */
 #define SetupLDir()	SetBit(DDRB, PB6)
 /* PB5 controls right motor direction (forward/reverse) */
@@ -23,9 +15,9 @@
 /* we compare to OCR1A/B for R/L motor speeds */
 #define lPWM		OCR1B
 #define rPWM		OCR1A
-/* set direction (input to H-bridge) and wave output mode */
-#define LFwd()		( ClearBit(PORTB, PB6),   SetBit(TCCR1A, COM1B1), ClearBit(TCCR1A, COM1B0) )
-#define LRev()		(   SetBit(PORTB, PB6),   SetBit(TCCR1A, COM1B1),   SetBit(TCCR1A, COM1B0) )
+/* set direction and wave output mode */
+#define LFwd()		( ClearBit(PORTB, PB6),   SetBit(TCCR1A, COM1B1), ClearBit(TCCR1A, COM1B0) ) // clear on compare match - output to low
+#define LRev()		(   SetBit(PORTB, PB6),   SetBit(TCCR1A, COM1B1),   SetBit(TCCR1A, COM1B0) ) // set -> high
 #define LStop()		( ClearBit(PORTB, PB6), ClearBit(TCCR1A, COM1B1), ClearBit(TCCR1A, COM1B0) )
 #define RFwd()		( ClearBit(PORTB, PB5),   SetBit(TCCR1A, COM1A1), ClearBit(TCCR1A, COM1A0) )
 #define RRev()		(   SetBit(PORTB, PB5),   SetBit(TCCR1A, COM1A1),   SetBit(TCCR1A, COM1A0) )

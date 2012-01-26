@@ -21,15 +21,15 @@ int readLineSensor(int _sensor)
 	ret = PINB & (1 << sensorIn); 			// read from sensor
 	PORTB &= ~(1<<sensorPower); 			// deactivate sensor
 
-	/*
-	if(_sensor==1)
+	
+
+	/*if(_sensor==1)
 		return GetADC(LEFT_LINE_IN);
 	else if (_sensor==2)
 		return GetADC(RIGHT_LINE_IN);
 	else
 		return -1;
 	*/
-
 	return ret;
 }
 
