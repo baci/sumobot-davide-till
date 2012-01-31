@@ -1,88 +1,61 @@
 #include <avr/io.h>
+#include <stdint.h>
+#include <avr/interrupt.h>
+#include <avr/wdt.h>
 #include <stdlib.h>
 #include "servos.h"
-#include "Sensors.h"
 
-State StateInit(){
-	state = (State *)malloc(sizeof(State));
 
-	if(!state){
-		state->leftMotor = 0;
-		state->rightMotor = 0;
-		state->isStopped = 1;
-	}
+/* 
+FastPWM timer:
+2000: L rev / R fwd
+1500: L stop / R stop
+1000: L fwd / R rev 
+*/
+#define TOP 		20000
+#define LEFT 		OCR1B
+#define RIGHT 		OCR1A
 
-	return *state;
+/* motor timers initialization */
+void motorInit(){
+
+	DDRB |= 1<<PB6 | 1<<PB5; //for writing to OC1B,A
+	PORTB |= ~(1 << PB5);
+	PORTB |= ~(1 << PB6);
+
+	//fast pwm, prescaler 8, toggle on compare match
+	TCCR1A |= 1<<COM1A0 | 1<<COM1A1 | 1<<COM1B1 | 1<<COM1B1 | 1<<WGM11;
+	TCCR1A &= ~(1<<WGM10);
+
+	TCCR1B |= 1<<CS11 | 1<<WGM13 | 1<<WGM12;
+	TCCR1B &= ~(1<<CS10);						// prescaler
+	TCCR1B &= ~(1<<CS12);
+
+	ICR1 = TOP;
+	
 }
 
-void setMotorSpeed(int left, int right)
-{
-	SetLeftMotorPWM(left);
-	SetRightMotorPWM(right);
-
-	// update state struct...
-	state->leftMotor = left;
-	state->rightMotor = right;
-	if(left==0 && right==0) state->isStopped = 1;
-	else state->isStopped = 0;
+void moveFwd(){
+	LEFT = TOP-2000;
+	RIGHT = TOP-1000;
 }
 
-/* sets up microprocessor for PWM control of motors */
-void motorInit()
-{
-	/* set up ports */
-	SetupLDir();
-	SetupRDir();
-	SetupLPWM();
-	SetupRPWM();
-
-	TCNT1 = 0;
-
-	/* see comment above for info on PWM initialization */
-	/* start with motors disconnected from Timer/Counter output */
-	TCCR1A = 0x01;	// 00 00 00 01
-	TCCR1B = 0x0B;	// 000 01 011 (512 Hz) /64 C
-
-	/* OCR1A/B are the values that the timer is compared to; a match will
-	   cause the output to change; small values mean the motor runs for a
-	   short period (slower); larger values are longer times (faster)*/
-	lPWM = rPWM = 0;	// (value is irrelevant since outputs are disconnected)
+void moveLeft(){
+	LEFT = TOP-1000;
+	RIGHT = TOP-1000;
 }
 
-/* pwm values can range from -255 (full-speed reverse)
-   to 255 (full-speed forward), with 0 indicating a stop */
-void SetLeftMotorPWM(int pwm)
-{
-	if (pwm == 0) LStop();
-	else
-	{
-		if (pwm >= 0)LFwd();
-		else
-		{
-			LRev();
-			pwm = -pwm;
-		}
-		if (pwm > 255)pwm = 255;
-
-		lPWM = pwm;		// set width for PWM
-	}
+void moveRight(){
+	LEFT = TOP-2000;
+	RIGHT = TOP-2000;
 }
 
-/* pwm values can range from -255 (full-speed reverse)
-   to 255 (full-speed forward), with 0 indicating a stop */
-void SetRightMotorPWM(int pwm)
-{
-	if (pwm == 0)RStop();
-	else
-	{
-		if (pwm >= 0)RFwd();
-		else
-		{
-			RRev();
-			pwm = -pwm;
-		}
-		if (pwm > 255)pwm = 255;
+void moveBwd(){
+	LEFT = TOP-1000;
+	RIGHT = TOP-2000;
+}
 
-		rPWM = pwm;		// set width for PWM
-	}
+void stop(){
+	LEFT = TOP-1500;
+	RIGHT = TOP-1500;
 }

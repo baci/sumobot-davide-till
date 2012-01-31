@@ -22,9 +22,7 @@
 /*** Functions ***/
 
 /* Set the timer to count milliseconds */
-void initialize_time();
 
 /* Delay for given milliseconds */
-void delay(uint32_t ms);
 
 #endif

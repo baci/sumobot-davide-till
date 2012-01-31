@@ -2,7 +2,7 @@
 #include <avr/io.h>
 #include <stdlib.h>
 #include <avr/interrupt.h>
-#include "Sensors.h"
+#include "sumobot.h"
 
 /*
 *	Timer/Counter 0 (for timing)
@@ -59,7 +59,7 @@ char TimerCheck(unsigned long msStart, unsigned int msWait)
 }
 
 /* pauses for the specified number of milliseconds */
-void TimerWait(unsigned int ms)
+void delay(unsigned int ms)
 {
 	unsigned long msStart;
 
