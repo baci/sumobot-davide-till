@@ -10,7 +10,7 @@ void QTISensorInit(){
 	PORTB |= (1 << PB0) | (1 << PB2);
 	
 	//according with the datasheet, after initialization we need to have a delay of 1ms
-	delay(1);
+	TimerWait(1);
 	
 	//set bits to low for reading
 	DDRB &= ~(1<<PB0);
@@ -19,9 +19,11 @@ void QTISensorInit(){
 }
 
 int readLeftQTISensor(){
+	QTISensorInit();
 	return(bit_is_set(PINB, PINB2)); //robot on the black ground (1)
 }
 
 int readRightQTISensor(){
+	QTISensorInit();
 	return(bit_is_set(PINB, PINB0)); //robot on the black ground (1)
 }

@@ -6,7 +6,7 @@
 
 int IRdetect(){
 	int n = 0;
-	delay(3000);
+	TimerWait(3000);
 	
 	int i;
 	while(1){
@@ -17,30 +17,30 @@ int IRdetect(){
 		
 		switch(n){
 			case 1:
-				moveFwd();
+				setMotorSpeed(100, 100);
 				delay(2000);
 				stop();
 				break;
 			case 2:
-				moveLeft();
+				setMotorSpeed(100, 0);
 				delay(2000);
 				stop();
 				break;
 			case 3:
-				moveRight();
+				setMotorSpeed(0,100);
 				delay(2000);
 				stop();
 				break;
 			case 4:
-				moveBwd();
+				setMotorSpeed(0,100);
 				delay(2000);
 				stop();
 				break;
 			case 5:
-				delay(2000);
+				TimerWait(2000);
 				return 0;
 			default:
-				stop();
+				setMotorSpeed(0, 0);
 		}
 	}
 	return 0;
