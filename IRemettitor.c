@@ -1,12 +1,9 @@
 #include <avr/io.h>
-#include <stdio.h>
 #include <string.h>
 #include <math.h>
 #include "sumobot.h"
 #include "IRemettitor.h"
 #include "timer.h"
-#include "LCD_driver.h"
-#include "lcd_functions.h"
 
 //frame in the beginning of each message
 const char headerFrame[4] = "0101";
@@ -42,7 +39,6 @@ int readEmettitor(int *sensor){
 		counter = 0;
 		
 		while(setBitSensor(&sensor) && counter <= 150){
-			LCD_puts("Timer",0);
 			counter++;
 		}
 		
@@ -58,7 +54,6 @@ int readEmettitor(int *sensor){
 		counter = 0;
 		
 		while(clearBitSensor(&sensor) && counter <= 50){
-			LCD_puts("Counting",0);
 			counter++;
 		}	
 		
@@ -139,13 +134,11 @@ void sendSequence(void){
 	int i;
 	int sequence[14] = {0,1,0,1,0,0,0,0,0,1,1,1,1,0};
 	
-	LCD_puts("Sending",0);
 	// send the frame 3 times
 	for(i = 0; i <= 3; i++){
 		i++;
 		sendInfos(sequence);
 	}
-	LCD_puts("Frame Sent :)",0);
 	delay(1000);
 }
 
@@ -202,7 +195,6 @@ int setBitSensor(int *sensorNumber){
 				return 1;
 			break;
 		default:
-		LCD_puts("Error",0);
 			return 0;
 	}
 	return 0;
@@ -219,7 +211,6 @@ int clearBitSensor(int *sensorNumber){
 				return 1;
 			break;
 		default:
-		LCD_puts("Error",0);
 			return 0;
 	}
 	return 0;	

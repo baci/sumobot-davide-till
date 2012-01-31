@@ -3,6 +3,6 @@
 
 void QTISensorInit();
 int readLeftQTISensor();
-int readRightQTISensor()
+int readRightQTISensor();
 
 #endif

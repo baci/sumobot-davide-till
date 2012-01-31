@@ -1,8 +1,8 @@
 #include <avr/io.h>
 #include <stdlib.h>
 #include <avr/interrupt.h>
-#include "sumobot.h"
 #include "timer.h"
+#include "sumobot.h"
 
 /*
 *	Timer/Counter 0 (for timing)

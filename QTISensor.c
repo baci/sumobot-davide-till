@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include <avr/io.h>
 #include "QTISensor.h"
 #include "timer.h"
@@ -26,5 +25,3 @@ int readLeftQTISensor(){
 int readRightQTISensor(){
 	return(bit_is_set(PINB, PINB0)); //robot on the black ground (1)
 }
-
-

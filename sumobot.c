@@ -13,14 +13,12 @@
 
 #include "servos.h"
 #include "timer.h"
-#include "LCD_driver.h"
-#include "lcd_functions.h"
 #include "sumobot.h"
 #include "IRemettitor.h"
 #include "IRdetector.h"
 #include "QTISensor.h"
+#include "IRSensor.h"
 
-void setMotorSpeed(int, int);
 
 int main(void){
 	InitSumobot();
@@ -34,9 +32,6 @@ int main(void){
 	//wait 5 seconds before fighting
 	delay(5000);
 	
-	LCD_puts("Start!!!",0);
-
-
 	while(1)
 	{
 		stop();
@@ -54,12 +49,10 @@ int main(void){
 }
 
 void InitSumobot(void){
-	LCD_Init();
 	motorInit();
-//	IRsensorInit();
-//	IRemettitorInit();
-//	IRdetectorInit();
-//	QTISensorInit();
+	IRemettitorInit();
+	IRdetectorInit();
+	QTISensorInit();
 }
 /*
 int readLeftIR(void){
