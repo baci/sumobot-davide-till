@@ -3,7 +3,7 @@
 #include "QTISensor.h"
 #include "timer.h"
 
-void QTISensorInit(void){
+void QTISensorInit(){
 	// set direction as out
 	DDRB |= (1 << PB0) | (1 << PB2);
 

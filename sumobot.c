@@ -18,7 +18,7 @@
 #include "sumobot.h"
 #include "IRemettitor.h"
 #include "IRdetector.h"
-
+#include "QTISensor.h"
 
 void setMotorSpeed(int, int);
 
@@ -59,6 +59,7 @@ void InitSumobot(void){
 //	IRsensorInit();
 //	IRemettitorInit();
 //	IRdetectorInit();
+//	QTISensorInit();
 }
 /*
 int readLeftIR(void){

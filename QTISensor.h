@@ -1,7 +1,7 @@
-#ifndef _QTI
-#define _QTI
+#ifndef QTI
+#define QTI
 
-void QTISensorInit(void);
+void QTISensorInit();
 int readLeftQTISensor();
 int readRightQTISensor()
 
