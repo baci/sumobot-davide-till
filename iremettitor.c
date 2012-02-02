@@ -139,7 +139,7 @@ void sendSequence(void){
 		i++;
 		sendInfos(sequence);
 	}
-	TimerWait(1000);
+	delay(1000);
 }
 
 /* If in the frame there is a 1, switch on the green LED
@@ -149,7 +149,7 @@ void sendSequence(void){
 
 void high(void){
 	DDRB |= 1 << DD4; // left light
-	TimerWait(2);
+	delay(2);
 }
 
 /* If in the frame there is a 0, switch on the red LED
@@ -158,13 +158,13 @@ void high(void){
  */
 void low(void){
 	DDRB |= 1 << DD4; // left light
-	TimerWait(1);	
+	delay(1);	
 }
 
 // no LED output when changing data direction register
 void lowLevel(void){
 	DDRB &= ~(1 << DD4); // left light
-	TimerWait(1);
+	delay(1);
 }
 
 int binaryTodecimal(char *binary){

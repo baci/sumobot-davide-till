@@ -4,17 +4,19 @@
 
 /* We need to change (maybe) the number of port here in the code */
 
-static uint32_t _black = _BLACK;
+static int _black = _BLACK;
 
 void QTIInit(){
-        DDRB |= (1<<PB1);
-        PORTB &= ~(1<<PB1);
-
+		// left QTI
+        DDRB |= (1<<PB2);
+        PORTB &= ~(1<<PB2);
+		
+		// right QTI
         DDRB |= (1<<PB0);
         PORTB &= ~(1<<PB0);
 }
 
-void calibrate_QTI(){
+void QTIAdjust(){
         _black = _TOP_BLACK;
         _black = (right_raw()+left_raw())/10;
 }
@@ -24,37 +26,37 @@ void calibrate_QTI(){
 static inline void discharge_left(){
         /* R HIGH output */
         /* 1 ms pause */
-        DDRB |= (1<<PB1);
-        PORTB |= (1<<PB1);
-        TimerWait(5);
+        DDRB |= (1<<PB2);
+        PORTB |= (1<<PB2);
+        delay(5);
 }
 
 static inline void start_charge_left(){
         /* R LOW input */
-        PORTB &= ~(1<<PB1);
-        DDRB &= ~(1<<PB1);
+        PORTB &= ~(1<<PB2);
+        DDRB &= ~(1<<PB2);
 }
 
-static inline uint8_t read_left(){
+static inline int read_left(){
         /* R input value */
-        return bit_is_set(PINB, PB1);
+        return bit_is_set(PINB, PB2);
 }
 
-uint32_t left_raw(){
-        uint32_t t=0;
+int left_raw(){
+        int count=0;
 
         discharge_left();
         
-        t = 0;
+        count = 0;
         cli();
         start_charge_left();
-        while (read_left() && t<_black) ++t;
+        while (read_left() && count<_black) ++count;
         sei();
         
-        return t;
+        return count;
 }
 
-uint8_t left_outside(){
+int left_outside(){
         return left_raw()<_black;
 }
 
@@ -65,7 +67,7 @@ static inline void discharge_right(){
         /* 1 ms pause */
         DDRB |= (1<<PB0);
         PORTB |= (1<<PB0);
-        TimerWait(5);
+        delay(5);
 }
 
 static inline void start_charge_right(){
@@ -74,25 +76,25 @@ static inline void start_charge_right(){
         DDRB &= ~(1<<PB0);
 }
 
-static inline uint8_t read_right(){
+static inline int read_right(){
         /* R input value */
         return bit_is_set(PINB, PB0);
 }
 
-uint32_t right_raw(){
-        uint32_t t=0;
+int right_raw(){
+        int count=0;
 
         discharge_right();
         
-        t = 0;
+        count = 0;
         cli();
         start_charge_right();
-        while (read_right() && t<_black) ++t;
+        while (read_right() && count<_black) ++count;
         sei();
         
-        return t;
+        return count;
 }
 
-uint8_t right_outside(){
+int right_outside(){
         return right_raw()<_black;
 }

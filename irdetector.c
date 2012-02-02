@@ -6,7 +6,7 @@
 
 int IRdetect(){
 	int n = 0;
-	TimerWait(3000);
+	delay(3000);
 	
 	int i;
 	while(1){
