@@ -19,25 +19,25 @@ int IRdetect(){
 			case 1:
 				setMotorSpeed(100, 100);
 				delay(2000);
-				stop();
+				//stop();
 				break;
 			case 2:
 				setMotorSpeed(100, 0);
 				delay(2000);
-				stop();
+				//stop();
 				break;
 			case 3:
 				setMotorSpeed(0,100);
 				delay(2000);
-				stop();
+				//stop();
 				break;
 			case 4:
 				setMotorSpeed(0,100);
 				delay(2000);
-				stop();
+				//stop();
 				break;
 			case 5:
-				TimerWait(2000);
+				delay(2000);
 				return 0;
 			default:
 				setMotorSpeed(0, 0);

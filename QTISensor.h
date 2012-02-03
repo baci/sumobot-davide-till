@@ -10,11 +10,11 @@
 /*** Functions ***/
 
 void QTIInit();
-void QTIAdjust();
 int right_raw();
 int left_raw();
+void QTIAdjust();
 
-/* Returns positive if sensor is outside the arena */
+/* Returns positive if sensor is outside the arena ( = white) */
 int right_outside();
 int left_outside();
 

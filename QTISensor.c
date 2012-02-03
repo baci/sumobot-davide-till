@@ -2,8 +2,6 @@
 #include "QTISensor.h"
 #include "timer.h"
 
-/* We need to change (maybe) the number of port here in the code */
-
 static int _black = _BLACK;
 
 void QTIInit(){
@@ -14,8 +12,12 @@ void QTIInit(){
 		// right QTI
         DDRB |= (1<<PB0);
         PORTB &= ~(1<<PB0);
+
+		QTIAdjust(); // initially black area
 }
 
+
+/* determine initial ground color for black */
 void QTIAdjust(){
         _black = _TOP_BLACK;
         _black = (right_raw()+left_raw())/10;
@@ -23,31 +25,28 @@ void QTIAdjust(){
 
 /*** Left side ***/
 
+/* R HIGH output and >1ms sleep */
 static inline void discharge_left(){
-        /* R HIGH output */
-        /* 1 ms pause */
         DDRB |= (1<<PB2);
         PORTB |= (1<<PB2);
         delay(5);
 }
 
+/* R LOW input */
 static inline void start_charge_left(){
-        /* R LOW input */
         PORTB &= ~(1<<PB2);
         DDRB &= ~(1<<PB2);
 }
 
 static inline int read_left(){
-        /* R input value */
         return bit_is_set(PINB, PB2);
 }
 
+/* returns amount of 1's counted from sensor */
 int left_raw(){
         int count=0;
-
         discharge_left();
         
-        count = 0;
         cli();
         start_charge_left();
         while (read_left() && count<_black) ++count;
@@ -57,36 +56,33 @@ int left_raw(){
 }
 
 int left_outside(){
-        return left_raw()<_black;
+        return left_raw() < _black;
 }
 
 /*** Right side ***/
 
+/* R HIGH output, >1ms sleep */
 static inline void discharge_right(){
-        /* R HIGH output */
-        /* 1 ms pause */
         DDRB |= (1<<PB0);
         PORTB |= (1<<PB0);
         delay(5);
 }
 
+/* R LOW input */
 static inline void start_charge_right(){
-        /* R LOW input */
         PORTB &= ~(1<<PB0);
         DDRB &= ~(1<<PB0);
 }
 
 static inline int read_right(){
-        /* R input value */
         return bit_is_set(PINB, PB0);
 }
 
+/* returns amount of 1's counted from sensor */
 int right_raw(){
         int count=0;
-
         discharge_right();
         
-        count = 0;
         cli();
         start_charge_right();
         while (read_right() && count<_black) ++count;
@@ -96,5 +92,5 @@ int right_raw(){
 }
 
 int right_outside(){
-        return right_raw()<_black;
+        return right_raw() < _black;
 }

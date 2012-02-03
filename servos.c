@@ -4,69 +4,44 @@
 #include "Sensors.h"
 
 
+/*
+	Prescaler 8, 50Hz
+	Output freq. = clock/(2*Prescaler*TOP)
+	= 8000000/(2*8*10000) = 50Hz
+*/
+
+
 void setMotorSpeed(int left, int right)
 {
-        SetLeftMotorPWM(left);
-        SetRightMotorPWM(right);
+        if(left>MAX) 		left = MAX;
+		else if(left<MIN) 	left = MIN;
+		if(right>MAX) 		right = MAX;
+		else if(right<MIN) 	right = MIN;
+
+		// left servo
+		OCR1B = left;
+
+		// right servo
+        OCR1A = right;
 }
 
 /* sets up microprocessor for PWM control of motors */
 void motorInit()
 {
-        /* set up ports */
-        SetupLDir();
-        SetupRDir();
-        SetupLPWM();
-        SetupRPWM();
+        TCCR1A = 0;
+        TCCR1B = 0;
 
-        TCNT1 = 0;
+        DDRB |= (1<<PB5) | (1<<PB6);
 
-        /* see comment above for info on PWM initialization */
-        /* start with motors disconnected from Timer/Counter output */
-        TCCR1A = 0x01;  // 00 00 00 01
-        TCCR1B = 0x0B;  // 000 01 011 (512 Hz) /64 C
+		// with 50Hz Prescaler, cycle lasts 20ms
+		ICR1 = TOP;
 
-        /* OCR1A/B are the values that the timer is compared to; a match will
-           cause the output to change; small values mean the motor runs for a
-           short period (slower); larger values are longer times (faster)*/
-        lPWM = rPWM = 0;        // (value is irrelevant since outputs are disconnected)
+		setMotorSpeed(750,750);
+
+		// set compare registers:
+		// PFCM, set up, clear up
+		TCCR1A |= (1<<COM1A1) | (1<<COM1B1);
+
+		// PFCM, Top value = ICR1
+		TCCR1B |= (1<<WGM13) | (0<<CS12) | (1<<CS11) | (0<<CS10);
 }
-
-/* pwm values can range from -255 (full-speed reverse)
-   to 255 (full-speed forward), with 0 indicating a stop */
-void SetLeftMotorPWM(int pwm)
-{
-        if (pwm == 0) LStop();
-        else
-        {
-                if (pwm >= 0)LFwd();
-                else
-                {
-                        LRev();
-                        pwm = -pwm;
-                }
-                if (pwm > 255)pwm = 255;
-
-                lPWM = pwm;             // set width for PWM
-        }
-}
-
-/* pwm values can range from -255 (full-speed reverse)
-   to 255 (full-speed forward), with 0 indicating a stop */
-void SetRightMotorPWM(int pwm)
-{
-        if (pwm == 0)RStop();
-        else
-        {
-                if (pwm >= 0)RFwd();
-                else
-                {
-                        RRev();
-                        pwm = -pwm;
-                }
-                if (pwm > 255)pwm = 255;
-
-                rPWM = pwm;             // set width for PWM
-        }
-}
-
