@@ -46,7 +46,7 @@ void dutyCycle(unsigned int servo, unsigned int duty){
 }
 
 void setMotorSpeed(int left,int right){
-	setServoSpeed(1,left);
+	setServoSpeed(1,-left);
 	setServoSpeed(0,right);
 }
 

@@ -12,6 +12,7 @@
 #include "LCD_functions.h"
 #include "timer.h"
 #include "QTISensor.h"
+#include "pilot.h"
 
 #define RIGHT	0
 #define LEFT	1
@@ -36,17 +37,18 @@ int seek(){
 	while(1){
 		if (right_outside()){
 			LCD_puts("rightout",0);
-			setMotorSpeed(0, 100);
-			delay(200);
+			turnBackLeft(100);
+			delay(500);
 		} 
 		if (left_outside()){
 			LCD_puts("leftout",0);
-			setMotorSpeed(100, 0);
-			delay(200);
+			turnBackRight(100);
+			delay(500);
 		}
 		if(!left_outside() && !right_outside()){
 			LCD_puts("ok",0);
-			setMotorSpeed(100,-100);
+			//moveForward(100);
+			turnBackRight(100);
 		}
 	}
 	return 0;
