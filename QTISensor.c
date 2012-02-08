@@ -1,89 +1,81 @@
 #include "QTISensor.h"
 
-static uint32_t _black=DEFAULT_BLACK;
+static uint32_t _black=INIT_BLACK;
 
-void initialize_QTI(){
-	QTI_DDR |= (1<<LR);
-	QTI_DDR |= (1<<RR);
-	QTI_PORT &= ~(1<<LR);
-	QTI_PORT &= ~(1<<RR);
+void initQTI(){
+	QTI_DDR |= (1<<QTI_LEFT);
+	QTI_DDR |= (1<<QTI_RIGHT);
+	QTI_PORT &= ~(1<<QTI_LEFT);
+	QTI_PORT &= ~(1<<QTI_RIGHT);
+
+	_black = INIT_BLACK;
+	_black = (countRight()+countLeft());
 }
 
-void calibrate_QTI(){
-	_black = MAX_BLACK;
-	_black = (right_raw()+left_raw());
-}
-
-static inline void discharge_left(){
-	/* R HIGH output */
-	/* 1 ms pause */
-	QTI_DDR |= (1<<LR);
-	QTI_PORT |= (1<<LR);
+static inline void dischargeLeft(){
+	/* set output to HIGH, pause > 1ms */
+	QTI_DDR |= (1<<QTI_LEFT);
+	QTI_PORT |= (1<<QTI_LEFT);
 	delay(5);
 }
 
-static inline void discharge_right(){
-	/* R HIGH output */
-	/* 1 ms pause */
-	QTI_DDR |= (1<<RR);
-	QTI_PORT |= (1<<RR);
+static inline void dischargeRight(){
+	/* set output to HIGH, pause > 1ms */
+	QTI_DDR |= (1<<QTI_RIGHT);
+	QTI_PORT |= (1<<QTI_RIGHT);
 	delay(5);
 }
 
-static inline void start_charge_left(){
-	/* R LOW input */
-	QTI_PORT &= ~(1<<LR);
-	QTI_DDR &= ~(1<<LR);
+static inline void startChargeLeft(){
+	QTI_PORT &= ~(1<<QTI_LEFT);
+	QTI_DDR &= ~(1<<QTI_LEFT);
 }
 
-static inline void start_charge_right(){
-	/* R LOW input */
-	QTI_PORT &= ~(1<<RR);
-	QTI_DDR &= ~(1<<RR);
+static inline void startChargeRight(){
+	QTI_PORT &= ~(1<<QTI_RIGHT);
+	QTI_DDR &= ~(1<<QTI_RIGHT);
 }
 
-static inline uint8_t read_left(){
-	/* R input value */
-	return bit_is_set(QTI_PIN, LR);
+static inline int readLeft(){
+	return bit_is_set(QTI_PIN, QTI_LEFT);
 }
 
-static inline uint8_t read_right(){
-	/* R input value */
-	return bit_is_set(QTI_PIN, RR);
+static inline int readRight(){
+	return bit_is_set(QTI_PIN, QTI_RIGHT);
 }
 
-uint32_t left_raw(){
-	uint32_t t=0;
+unsigned int countLeft(){
+	unsigned int t=0;
 
-	discharge_left();
+	dischargeLeft();
 	
 	t = 0;
 	cli();
-	start_charge_left();
-	while (read_left() && t<_black) ++t;
+	startChargeLeft();
+	while (readLeft() && t < _black) ++t;
 	sei();
 	
 	return t;
 }
 
-uint32_t right_raw(){
-	uint32_t t=0;
+unsigned int countRight(){
+	unsigned int t=0;
 
-	discharge_right();
+	dischargeRight();
 	
 	t = 0;
 	cli();
-	start_charge_right();
-	while (read_right() && t<_black) ++t;
+	startChargeRight();
+	while (readRight() && t < _black) ++t;
 	sei();
 	
 	return t;
 }
 
-uint8_t left_outside(){
-	return left_raw()<_black;
+int leftIsWhite(){
+	return countLeft() < _black;
 }
 
-uint8_t right_outside(){
-	return right_raw()<_black;
+int rightIsWhite(){
+	return countRight() < _black;
 }

@@ -24,7 +24,7 @@
 
 #define DUTY_CONST		200
 
-void motorInit();
+void initMotors();
 void setServoSpeed(unsigned int, int);
 void dutyCycle(unsigned int, unsigned int);
 void setMotorSpeed(int, int);

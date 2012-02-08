@@ -1,13 +1,9 @@
-/********* Line detection *********
- *
- * Functions for using the line
- * sensors.
- *
- * W is connected to Vcc
- * R is read as an input
- * B is connected to Vss
- *
- **********************************/
+/*
+	authors: Davide Berdin, Till Riemer
+
+	Functions for the use of QTI/Line sensors
+*/
+
 
 #ifndef _QTI_
 #define _QTI_ 1
@@ -20,21 +16,20 @@
 #define QTI_DDR			DDRB
 #define QTI_PIN			PINB
 
-#define RR				PB0
-#define LR				PB1
+#define QTI_RIGHT		PB0
+#define QTI_LEFT		PB1
 
-#define DEFAULT_BLACK	300
-#define MAX_BLACK		5000
+#define INIT_BLACK		5000
 
-/*** Functions ***/
+/* calculates the value which should be the lowest one accepted as black */
+void initQTI();
 
-void initialize_QTI();
-void calibrate_QTI();
-uint32_t right_raw();
-uint32_t left_raw();
+/* returns count of 1's returned by sensor for determining brightness of surface */
+unsigned int countRight();
+unsigned int countLeft();
 
-/* Returns positive if sensor is outside the arena */
-uint8_t right_outside();
-uint8_t left_outside();
+/* returns positive if sensor is on white ground */
+int rightIsWhite();
+int leftIsWhite();
 
 #endif

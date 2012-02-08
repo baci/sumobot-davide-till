@@ -20,14 +20,13 @@ int seek();
 
 int main(void){
 	LCD_Init();
-	motorInit();
-	InitTimer();
-	initialize_QTI();	
-	initializeLED();
+	initMotors();
+	initTimer();
+	initQTI();	
+	initLED();
 
 	delay(1000);
 	
-	calibrate_QTI();
 	seek();
 
 	return 0;
@@ -37,15 +36,15 @@ int main(void){
 int seek(){
 	while(1){
 		
-		if (left_outside()){
+		if (leftIsWhite()){
 			LCD_puts("leftout",0);
 			turnBackRight(100);
 		} 
-		else if (right_outside()){
+		else if (rightIsWhite()){
 			LCD_puts("rightout",0);
 			turnBackLeft(100);
 		}
-		else if(!left_outside() && !right_outside()){
+		else if(!leftIsWhite() && !rightIsWhite()){
 			LCD_puts("ok",0);
 			moveForward(100);
 		}

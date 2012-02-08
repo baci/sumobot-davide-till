@@ -14,7 +14,7 @@
 static volatile unsigned long s_msTimer = 0;
 
 /* sets up Timer/Counter 0 */
-void InitTimer()
+void initTimer()
 {
 	/* start counting at 0 */
 	TCNT0 = 0;

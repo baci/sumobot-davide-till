@@ -1,7 +1,7 @@
 #include <avr/io.h>
 #include "servos.h"
 
-void motorInit(){
+void initMotors(){
 	/* Timer 1 */
  	TCCR1A = 0;
  	TCCR1B = 0;

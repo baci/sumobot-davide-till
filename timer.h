@@ -2,7 +2,7 @@
 #define TIMER_H
 
 /* initializes Timer/Counter 0 for timing */
-void InitTimer();
+void initTimer();
 
 /* returns number of ms since Timer initialized */
 unsigned long TimerMsCur();
