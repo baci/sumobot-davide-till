@@ -1,8 +1,12 @@
 #include "pilot.h"
 #include "servos.h"
+#include "LED.h"
+#include "timer.h"
 
 void moveForward(int speed)
 {
+	clearGreen();
+	clearRed();
 	setMotorSpeed(speed, speed);
 }
 void moveBackward(int speed)
@@ -16,6 +20,8 @@ void turnLeft(int speed)
 void turnBackLeft(int speed)
 {
 	setMotorSpeed(0, -speed);
+	setGreen();
+	delay(700);
 }
 void spinLeft(int speed)
 {
@@ -28,6 +34,8 @@ void turnRight(int speed)
 void turnBackRight(int speed)
 {
 	setMotorSpeed(-speed, 0);
+	setRed();
+	delay(700);
 }
 void spinRight(int speed)
 {

@@ -21,7 +21,7 @@
 #define QTI_PIN			PINB
 
 #define RR				PB0
-#define LR				PB2
+#define LR				PB1
 
 #define DEFAULT_BLACK	300
 #define MAX_BLACK		5000
