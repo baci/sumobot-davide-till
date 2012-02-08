@@ -1,96 +1,94 @@
-#include <avr/io.h>
 #include "QTISensor.h"
-#include "timer.h"
 
-static int _black = _BLACK;
+static uint32_t _black=DEFAULT_BLACK;
 
-void QTIInit(){
-		// left QTI
-        DDRB |= (1<<PB2);
-        PORTB &= ~(1<<PB2);
-		
-		// right QTI
-        DDRB |= (1<<PB0);
-        PORTB &= ~(1<<PB0);
+void initialize_QTI(){
+	QTI_DDR |= (1<<LR);
+	QTI_PORT &= ~(1<<LR);
 
-		QTIAdjust(); // initially black area
+	QTI_DDR |= (1<<RR);
+	QTI_PORT &= ~(1<<RR);
 }
 
-
-/* determine initial ground color for black */
-void QTIAdjust(){
-        _black = _TOP_BLACK;
-        _black = (right_raw()+left_raw())/10;
+void calibrate_QTI(){
+	_black = MAX_BLACK;
+	_black = (right_raw()+left_raw())/10;
 }
 
 /*** Left side ***/
 
-/* R HIGH output and >1ms sleep */
 static inline void discharge_left(){
-        DDRB |= (1<<PB2);
-        PORTB |= (1<<PB2);
-        delay(5);
+	/* R HIGH output */
+	/* 1 ms pause */
+	QTI_DDR |= (1<<LR);
+	QTI_PORT |= (1<<LR);
+	delay(5);
 }
 
-/* R LOW input */
 static inline void start_charge_left(){
-        PORTB &= ~(1<<PB2);
-        DDRB &= ~(1<<PB2);
+	/* R LOW input */
+	QTI_PORT &= ~(1<<LR);
+	QTI_DDR &= ~(1<<LR);
 }
 
-static inline int read_left(){
-        return bit_is_set(PINB, PB2);
+static inline uint8_t read_left(){
+	/* R input value */
+	return bit_is_set(QTI_PIN, LR);
 }
 
-/* returns amount of 1's counted from sensor */
-int left_raw(){
-        int count=0;
-        discharge_left();
-        
-        cli();
-        start_charge_left();
-        while (read_left() && count<_black) ++count;
-        sei();
-        
-        return count;
+uint32_t left_raw(){
+	uint32_t t=0;
+
+	discharge_left();
+	
+	t = 0;
+	cli();
+	start_charge_left();
+	while (read_left() && t<_black) ++t;
+	sei();
+	
+	return t;
 }
 
-int left_outside(){
-        return left_raw() < _black;
+uint8_t left_outside(){
+	return left_raw()<_black;
 }
 
 /*** Right side ***/
 
-/* R HIGH output, >1ms sleep */
 static inline void discharge_right(){
-        DDRB |= (1<<PB0);
-        PORTB |= (1<<PB0);
-        delay(5);
+	/* R HIGH output */
+	/* 1 ms pause */
+	QTI_DDR |= (1<<RR);
+	QTI_PORT |= (1<<RR);
+	delay(5);
 }
 
-/* R LOW input */
 static inline void start_charge_right(){
-        PORTB &= ~(1<<PB0);
-        DDRB &= ~(1<<PB0);
+	/* R LOW input */
+	QTI_PORT &= ~(1<<RR);
+	QTI_DDR &= ~(1<<RR);
 }
 
-static inline int read_right(){
-        return bit_is_set(PINB, PB0);
+static inline uint8_t read_right(){
+	/* R input value */
+	return bit_is_set(QTI_PIN, RR);
 }
 
-/* returns amount of 1's counted from sensor */
-int right_raw(){
-        int count=0;
-        discharge_right();
-        
-        cli();
-        start_charge_right();
-        while (read_right() && count<_black) ++count;
-        sei();
-        
-        return count;
+uint32_t right_raw(){
+	uint32_t t=0;
+
+	discharge_right();
+	
+	t = 0;
+	cli();
+	start_charge_right();
+	while (read_right() && t<_black) ++t;
+	sei();
+	
+	return t;
 }
 
-int right_outside(){
-        return right_raw() < _black;
+uint8_t right_outside(){
+	return right_raw()<_black;
 }

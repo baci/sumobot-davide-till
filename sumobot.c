@@ -24,9 +24,11 @@ int main(void){
 	LCD_Init();
 	motorInit();
 	InitTimer();
-	QTIInit();	
+	initialize_QTI();	
 
 	delay(1000);
+	
+	calibrate_QTI();
 	seek();
 
 	return 0;
@@ -47,8 +49,8 @@ int seek(){
 		}
 		if(!left_outside() && !right_outside()){
 			LCD_puts("ok",0);
-			//moveForward(100);
-			turnBackRight(100);
+			moveForward(100);
+			//turnBackRight(100);
 		}
 	}
 	return 0;
