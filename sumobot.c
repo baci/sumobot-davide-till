@@ -36,17 +36,17 @@ int seek(){
 	while(1){
 		if (right_outside()){
 			LCD_puts("rightout",0);
-			//setMotorSpeed(650, 850);
+			setMotorSpeed(0, 100);
 			delay(200);
 		} 
 		if (left_outside()){
 			LCD_puts("leftout",0);
-			//setMotorSpeed(850, 650);
+			setMotorSpeed(100, 0);
 			delay(200);
 		}
 		if(!left_outside() && !right_outside()){
 			LCD_puts("ok",0);
-			//setMotorSpeed(1000,500);
+			setMotorSpeed(100,-100);
 		}
 	}
 	return 0;
