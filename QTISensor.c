@@ -12,7 +12,7 @@ void initialize_QTI(){
 
 void calibrate_QTI(){
 	_black = MAX_BLACK;
-	_black = (right_raw()+left_raw())/10;
+	_black = (right_raw()+left_raw())/2;
 }
 
 /*** Left side ***/
@@ -30,6 +30,7 @@ static inline void start_charge_left(){
 	QTI_PORT &= ~(1<<LR);
 	QTI_DDR &= ~(1<<LR);
 }
+
 
 static inline uint8_t read_left(){
 	/* R input value */

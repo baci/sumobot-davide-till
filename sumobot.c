@@ -40,17 +40,16 @@ int seek(){
 		if (right_outside()){
 			LCD_puts("rightout",0);
 			turnBackLeft(100);
-			delay(500);
+			delay(1000);
 		} 
 		if (left_outside()){
 			LCD_puts("leftout",0);
 			turnBackRight(100);
-			delay(500);
+			delay(1000);
 		}
 		if(!left_outside() && !right_outside()){
 			LCD_puts("ok",0);
 			moveForward(100);
-			//turnBackRight(100);
 		}
 	}
 	return 0;
