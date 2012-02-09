@@ -1,5 +1,0 @@
-change name of irsensor.c and .h
-check servo motor configuration
-check sensor ports
-fix the main
-do the led stuff
