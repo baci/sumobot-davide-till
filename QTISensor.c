@@ -8,8 +8,8 @@ void initQTI(){
 	QTI_PORT &= ~(1<<QTI_LEFT);
 	QTI_PORT &= ~(1<<QTI_RIGHT);
 
-	_black = INIT_BLACK;
-	_black = (countRight()+countLeft());
+	_black = INIT_BLACK; 					// "real" black, deepest possible color
+	_black = (countRight() + countLeft()); 	// determine "black" based on initial position
 }
 
 static inline void dischargeLeft(){

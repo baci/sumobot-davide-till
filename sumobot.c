@@ -7,11 +7,11 @@
 #include <avr/interrupt.h>
 
 #include "servos.h"
-#include "Sensors.h"
 #include "LCD_driver.h"
 #include "LCD_functions.h"
 #include "timer.h"
 #include "QTISensor.h"
+#include "IRSensor.h"
 #include "pilot.h"
 #include "LED.h"
 
@@ -24,6 +24,8 @@ int main(void){
 	initTimer();
 	initQTI();	
 	initLED();
+	initialize_IR_LEDs();
+	initialize_IR_detectors();
 
 	delay(1000);
 	
@@ -35,19 +37,39 @@ int main(void){
 
 int seek(){
 	while(1){
-		
-		if (leftIsWhite()){
-			LCD_puts("leftout",0);
-			turnBackRight(100);
-		} 
-		else if (rightIsWhite()){
-			LCD_puts("rightout",0);
-			turnBackLeft(100);
+
+		if (obstacle_right()){
+			LCD_puts("RIGHT",0);
+			setGreen();
+			turnRight(100);
+
 		}
-		else if(!leftIsWhite() && !rightIsWhite()){
-			LCD_puts("ok",0);
+		else if(obstacle_left()){
+				LCD_puts("LEFT",0);
+				setRed();
+				turnLeft(100);
+		}
+		else{
+			LCD_puts("NO",0);
+			clearGreen();
+			clearRed();
 			moveForward(100);
-		}
+			}
+		/*else{
+		
+			if (leftIsWhite()){
+				LCD_puts("leftout",0);
+				turnBackRight(100);
+			} 
+			else if (rightIsWhite()){
+				LCD_puts("rightout",0);
+				turnBackLeft(100);
+			}
+			else if(!leftIsWhite() && !rightIsWhite()){
+				LCD_puts("ok",0);
+				moveForward(100);
+			}
+		}*/
 	}
 	return 0;
 }

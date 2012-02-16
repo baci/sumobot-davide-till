@@ -16,8 +16,8 @@
 #define QTI_DDR			DDRB
 #define QTI_PIN			PINB
 
-#define QTI_RIGHT		PB0
-#define QTI_LEFT		PB1
+#define QTI_RIGHT		PB2
+#define QTI_LEFT		PB0
 
 #define INIT_BLACK		5000
 
