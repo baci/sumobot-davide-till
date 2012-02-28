@@ -15,6 +15,8 @@
 #include "pilot.h"
 #include "LED.h"
 
+
+
 void init();
 int seek();
 
@@ -22,7 +24,8 @@ int main(void){
 	init();
 	LCD_Init();
 	initMotors();
-	initTimer();
+	//initTimer();
+	initialize_time();
 	initQTI();	
 	initLED();
 	initialize_IR_LEDs();
@@ -50,27 +53,54 @@ void init(){
 	sei();
 }
 
-int seek(){
-	while(1){
-		/*
-		if (obstacle_right()){
-			LCD_puts("RIGHT",0);
-			setGreen();
-			turnRight(100);
+#define FRONT 	0
+#define LEFT	1
+#define RIGHT	2
 
-		}
-		else if(obstacle_left()){
-				LCD_puts("LEFT",0);
-				setRed();
-				turnLeft(100);
-		}
-		else{
-			LCD_puts("NO",0);
-			clearGreen();
-			clearRed();
+int seek(){
+	int opp_right;
+	int opp_left;
+	int opp_last;
+	int p, i;
+
+	while(1){
+		/* Sensor */
+		opp_right = obstacle_right();
+		opp_left = obstacle_left();
+
+		/* Act on suspicion when unknown */
+		if (!opp_right && !opp_left){
+			opp_right = (opp_last == RIGHT || opp_last == FRONT);
+			opp_left = (opp_last == LEFT || opp_last == FRONT);
+			LCD_puts("NOTHING",0);
 			moveForward(100);
-			}*/
+		}
+
+		/* Adjustments */
+		if (opp_right && opp_left){
 			
+			p = 0;
+			i = 0;
+			opp_last = FRONT;
+			LCD_puts("FRONT",0);
+			moveBackward(100);
+		} else if (opp_right){
+			p = 1;
+			if (opp_last == RIGHT) ++i;
+			opp_last = RIGHT;
+			LCD_puts("RIGHT",0);
+			turnRight(100);
+		} else if (opp_left){
+			p = -1;
+			if (opp_last == LEFT) --i;
+			opp_last = LEFT;
+			LCD_puts("LEFT",0);
+			turnLeft(100);
+		}
+
+		
+
+		/*	
 			if (leftIsWhite()){
 				LCD_puts("leftout",0);
 				turnBackRight(100);
@@ -83,7 +113,7 @@ int seek(){
 				LCD_puts("ok",0);
 				moveForward(100);
 			}
-		
+		*/
 	}
 	return 0;
 }
