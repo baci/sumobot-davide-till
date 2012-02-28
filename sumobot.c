@@ -15,10 +15,11 @@
 #include "pilot.h"
 #include "LED.h"
 
-
+void init();
 int seek();
 
 int main(void){
+	init();
 	LCD_Init();
 	initMotors();
 	initTimer();
@@ -34,10 +35,24 @@ int main(void){
 	return 0;
 }
 
+/* Set clock frequency to 8 MHz */
+void init(){
+	cli();
+
+	CLKPR = 0;
+
+	/* Enable changing the clock prescaler */
+	CLKPR |= (1<<CLKPCE);
+
+	/* No scaling; This is only for reference */
+	CLKPR |= (0<<CLKPS3)|(0<<CLKPS2)|(0<<CLKPS1)|(0<<CLKPS0);
+
+	sei();
+}
 
 int seek(){
 	while(1){
-
+		/*
 		if (obstacle_right()){
 			LCD_puts("RIGHT",0);
 			setGreen();
@@ -54,9 +69,8 @@ int seek(){
 			clearGreen();
 			clearRed();
 			moveForward(100);
-			}
-		/*else{
-		
+			}*/
+			
 			if (leftIsWhite()){
 				LCD_puts("leftout",0);
 				turnBackRight(100);
@@ -69,7 +83,7 @@ int seek(){
 				LCD_puts("ok",0);
 				moveForward(100);
 			}
-		}*/
+		
 	}
 	return 0;
 }
