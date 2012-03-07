@@ -1,4 +1,4 @@
-qti.o: ../qti.c ../qti.h \
+QTISensor.o: ../QTISensor.c ../QTISensor.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/io.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/sfr_defs.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/inttypes.h \
@@ -9,10 +9,10 @@ qti.o: ../qti.c ../qti.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/version.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/fuse.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/lock.h \
-  c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h ../time.h \
+  c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h ../timer.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/sleep.h
 
-../qti.h:
+../QTISensor.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/io.h:
 
@@ -36,6 +36,6 @@ c:/winavr-20100110/lib/gcc/../../avr/include/avr/lock.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h:
 
-../time.h:
+../timer.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/sleep.h:

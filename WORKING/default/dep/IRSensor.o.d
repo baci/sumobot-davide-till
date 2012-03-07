@@ -1,4 +1,4 @@
-time.o: ../time.c ../time.h \
+IRSensor.o: ../IRSensor.c ../IRSensor.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/io.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/sfr_defs.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/inttypes.h \
@@ -9,10 +9,10 @@ time.o: ../time.c ../time.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/version.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/fuse.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/lock.h \
-  c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h \
+  c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h ../timer.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/sleep.h
 
-../time.h:
+../IRSensor.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/io.h:
 
@@ -35,5 +35,7 @@ c:/winavr-20100110/lib/gcc/../../avr/include/avr/fuse.h:
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/lock.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h:
+
+../timer.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/sleep.h:

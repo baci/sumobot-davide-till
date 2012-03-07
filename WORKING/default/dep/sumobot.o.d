@@ -1,4 +1,6 @@
 sumobot.o: ../sumobot.c \
+  c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h \
+  c:\winavr-20100110\bin\../lib/gcc/avr/4.3.3/include/stddef.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/io.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/sfr_defs.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/inttypes.h \
@@ -8,10 +10,14 @@ sumobot.o: ../sumobot.c \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/common.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/version.h \
   c:/winavr-20100110/lib/gcc/../../avr/include/avr/fuse.h \
-  c:/winavr-20100110/lib/gcc/../../avr/include/avr/lock.h ../time.h \
-  c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h \
-  c:/winavr-20100110/lib/gcc/../../avr/include/avr/sleep.h ../drive.h \
-  ../servos.h ../qti.h ../ir.h
+  c:/winavr-20100110/lib/gcc/../../avr/include/avr/lock.h \
+  c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h ../timer.h \
+  c:/winavr-20100110/lib/gcc/../../avr/include/avr/sleep.h ../servos.h \
+  ../QTISensor.h ../IRSensor.h ../pilot.h ../LED.h ../sumobot.h
+
+c:/winavr-20100110/lib/gcc/../../avr/include/stdlib.h:
+
+c:\winavr-20100110\bin\../lib/gcc/avr/4.3.3/include/stddef.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/io.h:
 
@@ -33,16 +39,20 @@ c:/winavr-20100110/lib/gcc/../../avr/include/avr/fuse.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/lock.h:
 
-../time.h:
-
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/interrupt.h:
+
+../timer.h:
 
 c:/winavr-20100110/lib/gcc/../../avr/include/avr/sleep.h:
 
-../drive.h:
-
 ../servos.h:
 
-../qti.h:
+../QTISensor.h:
 
-../ir.h:
+../IRSensor.h:
+
+../pilot.h:
+
+../LED.h:
+
+../sumobot.h:

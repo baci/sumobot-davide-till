@@ -1,53 +1,32 @@
-/********* Servo control **********
- *
- * A relatively low level driver
- * for controlling servos in a
- * simple manner.
- *
- * For SumoBot movement use
- * "drive.h" instead.
- *
- **********************************/
+/*
+	Authors: Davide Berdin, Till Riemer
+*/
 
-#ifndef _SERVOS_
-#define _SERVOS_ 1
-
-#include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define NUM_SERVOS			2
+#ifndef _INIT
+#define _INIT
 
-/* Calculated for 8 MHz with prescaler 8 (See Theory in the end) */
-#define ICR_VALUE			10000
-#define MIN_PULSE_OCR		500			/* 1ms = 1ms/20ms*ICR_VALUE */
-#define MAX_PULSE_OCR		1000		/* 2ms = 2ms/20ms*ICR_VALUE */
+// OCR High or low; depending on the servo
+#define LEFT_HIGH		OCR1BH	
+#define RIGHT_HIGH		OCR1AH
+#define LEFT_LOW		OCR1BL
+#define RIGHT_LOW		OCR1AL
 
-#define OCR_MIDDLE			750
-#define OCR_RANGE			500
+#define TOP_VALUE		255	// or 0xFF
 
-/*** Functions ***/
+#define ICR_VALUE       10000
+#define MIN_SPEED       500      
+#define MAX_SPEED       1000            
 
-/* Setup for the timer that generates a PWM waveform */
-void initialize_servos();
+#define NO_MOVE 		750		// no movement of a motor
+#define SPEED_RANGE     500
 
-/* Set speed of a specific servo from 0-100 */
-void set_speed(uint8_t servo, int8_t speed);
+#define DUTY_CONST		200
+
+void initMotors();
+void setServoSpeed(unsigned int, int);
+void dutyCycle(unsigned int, unsigned int);
+void setMotorSpeed(int, int);
 
 #endif
-
-
-/* Theory:
- * 
- * Output frequency (fout) is calculated with the formula:
- *
- * fout = clk/(2*N*TOP)
- *
- * Where clk is the system clock, N is the prescaler and
- * TOP is the maximum timer value.
- *
- * The TOP can be any 16-bit value, but the prescaler is always
- * a power of two AND is one the following: 1,8,16,32,64,128.
- * 
- * Ex.  fout = 8000000/(2*8*10000) [Hz]
- *		fout = 50 [Hz]
- */

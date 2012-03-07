@@ -37,7 +37,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = sumobot.o servos.o drive.o qti.o time.o ir.o 
+OBJECTS = QTISensor.o timer.o IRSensor.o servos.o sumobot.o LED.o pilot.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -46,22 +46,25 @@ LINKONLYOBJECTS =
 all: $(TARGET) sumobot.hex sumobot.eep sumobot.lss size
 
 ## Compile
-sumobot.o: ../sumobot.c
+QTISensor.o: ../QTISensor.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+timer.o: ../timer.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+IRSensor.o: ../IRSensor.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 servos.o: ../servos.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-drive.o: ../drive.c
+sumobot.o: ../sumobot.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-qti.o: ../qti.c
+LED.o: ../LED.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-time.o: ../time.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-ir.o: ../ir.c
+pilot.o: ../pilot.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

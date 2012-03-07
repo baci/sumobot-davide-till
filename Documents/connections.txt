@@ -3,10 +3,10 @@ PB0	yellow	P8	X4	QTI Input (L)
 PB1	orange			LED (L - red)
 PB2	red	P9	X5	QTI Input (R)	
 PB3	brown			LED (R - green)
-
+PB4	violet	P4/15	X8	IR LED (L AND R)
 PB5	white	P12	X6	Servo Actor (R)		OC1A
 PB6	grey	P13	X7	Servo Actor (L)		OC1B
-PB7	violet	P4/15	X8	IR LED (L AND R)
+
 PB8	blue			Ground
 PB9	green			Voltage
 
