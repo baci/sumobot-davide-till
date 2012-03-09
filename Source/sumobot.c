@@ -11,6 +11,13 @@ int main(void){
 	initQTI();	
 	initEmittors();
 	initDetectors();
+	
+	/* initialization for push buttons in order to determine whether the robot is pushed from the side,
+		as we had to rebuild our bot on the last day, we didnt have the time to implement this
+		feature properly - see also the ISRs below */
+	//PCMSK |= (1<<PD2) | (1<<PD3); // set pins for push button interrupts
+	//MCUCR = (1<<ISC01) | (1<<ISC00); // set interrupt to falling edge (sensor triggered)
+	//PCMSK0  |= (1<<PCINT0) | (1<<PCINT1); // enable interrupts for buttons
 
 	delay(5000);
 	
@@ -18,6 +25,22 @@ int main(void){
 
 	return 0;
 }
+
+/* push button ISRs, not used
+
+ISR(PCINT0_vect) // left push button
+{ 
+    turnRight(100);
+	delay(1500);
+}
+
+ISR(PCINT1_vect) // right push button
+{ 
+    turnLeft(100);
+	delay(1500);
+}
+
+*/
 
 
 /* initialize the system clock (8Mhz) */
