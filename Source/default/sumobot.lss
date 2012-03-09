@@ -1,0 +1,1455 @@
+
+sumobot.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000704  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .bss          00000006  00800100  00800100  00000778  2**0
+                  ALLOC
+  2 .debug_aranges 000000e0  00000000  00000000  00000778  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  3 .debug_pubnames 000002a5  00000000  00000000  00000858  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  4 .debug_info   00000909  00000000  00000000  00000afd  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_abbrev 00000453  00000000  00000000  00001406  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_line   000009f4  00000000  00000000  00001859  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_frame  000002d0  00000000  00000000  00002250  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_str    00000321  00000000  00000000  00002520  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_loc    00000258  00000000  00000000  00002841  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2e 00 	jmp	0x5c	; 0x5c <__ctors_end>
+   4:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+   8:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+   c:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  10:	0c 94 f4 00 	jmp	0x1e8	; 0x1e8 <__vector_4>
+  14:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  18:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  1c:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  20:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  24:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  28:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  2c:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  30:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  34:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  38:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  3c:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  40:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  44:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  48:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  4c:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  50:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  54:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+  58:	0c 94 40 00 	jmp	0x80	; 0x80 <__bad_interrupt>
+
+0000005c <__ctors_end>:
+  5c:	11 24       	eor	r1, r1
+  5e:	1f be       	out	0x3f, r1	; 63
+  60:	cf ef       	ldi	r28, 0xFF	; 255
+  62:	d4 e0       	ldi	r29, 0x04	; 4
+  64:	de bf       	out	0x3e, r29	; 62
+  66:	cd bf       	out	0x3d, r28	; 61
+
+00000068 <__do_clear_bss>:
+  68:	11 e0       	ldi	r17, 0x01	; 1
+  6a:	a0 e0       	ldi	r26, 0x00	; 0
+  6c:	b1 e0       	ldi	r27, 0x01	; 1
+  6e:	01 c0       	rjmp	.+2      	; 0x72 <.do_clear_bss_start>
+
+00000070 <.do_clear_bss_loop>:
+  70:	1d 92       	st	X+, r1
+
+00000072 <.do_clear_bss_start>:
+  72:	a6 30       	cpi	r26, 0x06	; 6
+  74:	b1 07       	cpc	r27, r17
+  76:	e1 f7       	brne	.-8      	; 0x70 <.do_clear_bss_loop>
+  78:	0e 94 d7 02 	call	0x5ae	; 0x5ae <main>
+  7c:	0c 94 80 03 	jmp	0x700	; 0x700 <_exit>
+
+00000080 <__bad_interrupt>:
+  80:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000084 <leftBrightness>:
+        delay(5);
+}
+
+static inline void leftHigh(){
+        // set to output, sleep 1ms
+        QTI_DDR |= (1<<LR);
+  84:	20 9a       	sbi	0x04, 0	; 4
+        QTI_PORT |= (1<<LR);
+  86:	28 9a       	sbi	0x05, 0	; 5
+        delay(5);
+  88:	85 e0       	ldi	r24, 0x05	; 5
+  8a:	90 e0       	ldi	r25, 0x00	; 0
+  8c:	0e 94 0b 01 	call	0x216	; 0x216 <delay>
+
+unsigned int leftBrightness(){
+        unsigned int bright = 0;
+
+        leftHigh();
+        cli();
+  90:	f8 94       	cli
+        QTI_DDR &= ~(1<<RR);
+}
+
+static inline void leftLow(){
+        // set to input
+        QTI_PORT &= ~(1<<LR);
+  92:	28 98       	cbi	0x05, 0	; 5
+        QTI_DDR &= ~(1<<LR);
+  94:	20 98       	cbi	0x04, 0	; 4
+        unsigned int bright = 0;
+
+        leftHigh();
+        cli();
+        leftLow();
+        while ((readLeft() && bright) < black) ++bright;
+  96:	40 91 00 01 	lds	r20, 0x0100
+  9a:	50 91 01 01 	lds	r21, 0x0101
+  9e:	20 e0       	ldi	r18, 0x00	; 0
+  a0:	30 e0       	ldi	r19, 0x00	; 0
+  a2:	02 c0       	rjmp	.+4      	; 0xa8 <leftBrightness+0x24>
+  a4:	2f 5f       	subi	r18, 0xFF	; 255
+  a6:	3f 4f       	sbci	r19, 0xFF	; 255
+  a8:	18 99       	sbic	0x03, 0	; 3
+  aa:	03 c0       	rjmp	.+6      	; 0xb2 <leftBrightness+0x2e>
+  ac:	80 e0       	ldi	r24, 0x00	; 0
+  ae:	90 e0       	ldi	r25, 0x00	; 0
+  b0:	06 c0       	rjmp	.+12     	; 0xbe <leftBrightness+0x3a>
+  b2:	c9 01       	movw	r24, r18
+  b4:	21 15       	cp	r18, r1
+  b6:	31 05       	cpc	r19, r1
+  b8:	11 f0       	breq	.+4      	; 0xbe <leftBrightness+0x3a>
+  ba:	81 e0       	ldi	r24, 0x01	; 1
+  bc:	90 e0       	ldi	r25, 0x00	; 0
+  be:	84 17       	cp	r24, r20
+  c0:	95 07       	cpc	r25, r21
+  c2:	80 f3       	brcs	.-32     	; 0xa4 <leftBrightness+0x20>
+        sei();
+  c4:	78 94       	sei
+       
+        return bright;
+}
+  c6:	c9 01       	movw	r24, r18
+  c8:	08 95       	ret
+
+000000ca <leftIsWhite>:
+unsigned int rightIsWhite(){
+        return rightBrightness() < black;
+}
+
+unsigned int leftIsWhite(){
+        return leftBrightness() < black;
+  ca:	0e 94 42 00 	call	0x84	; 0x84 <leftBrightness>
+  ce:	40 e0       	ldi	r20, 0x00	; 0
+  d0:	50 e0       	ldi	r21, 0x00	; 0
+  d2:	20 91 00 01 	lds	r18, 0x0100
+  d6:	30 91 01 01 	lds	r19, 0x0101
+  da:	82 17       	cp	r24, r18
+  dc:	93 07       	cpc	r25, r19
+  de:	10 f4       	brcc	.+4      	; 0xe4 <leftIsWhite+0x1a>
+  e0:	41 e0       	ldi	r20, 0x01	; 1
+  e2:	50 e0       	ldi	r21, 0x00	; 0
+}
+  e4:	ca 01       	movw	r24, r20
+  e6:	08 95       	ret
+
+000000e8 <rightBrightness>:
+        black = (rightBrightness()+leftBrightness());
+}
+
+static inline void rightHigh(){
+        // set to output, sleep 1ms
+        QTI_DDR |= (1<<RR);
+  e8:	21 9a       	sbi	0x04, 1	; 4
+        QTI_PORT |= (1<<RR);
+  ea:	29 9a       	sbi	0x05, 1	; 5
+        delay(5);
+  ec:	85 e0       	ldi	r24, 0x05	; 5
+  ee:	90 e0       	ldi	r25, 0x00	; 0
+  f0:	0e 94 0b 01 	call	0x216	; 0x216 <delay>
+
+unsigned int rightBrightness(){
+        unsigned int bright = 0;
+
+        rightHigh();
+        cli();
+  f4:	f8 94       	cli
+        delay(5);
+}
+
+static inline void rightLow(){
+        // set to input
+        QTI_PORT &= ~(1<<RR);
+  f6:	29 98       	cbi	0x05, 1	; 5
+        QTI_DDR &= ~(1<<RR);
+  f8:	21 98       	cbi	0x04, 1	; 4
+        unsigned int bright = 0;
+
+        rightHigh();
+        cli();
+        rightLow();
+        while ((readRight() && bright) < black) ++bright;
+  fa:	40 91 00 01 	lds	r20, 0x0100
+  fe:	50 91 01 01 	lds	r21, 0x0101
+ 102:	20 e0       	ldi	r18, 0x00	; 0
+ 104:	30 e0       	ldi	r19, 0x00	; 0
+ 106:	02 c0       	rjmp	.+4      	; 0x10c <rightBrightness+0x24>
+ 108:	2f 5f       	subi	r18, 0xFF	; 255
+ 10a:	3f 4f       	sbci	r19, 0xFF	; 255
+ 10c:	19 99       	sbic	0x03, 1	; 3
+ 10e:	03 c0       	rjmp	.+6      	; 0x116 <rightBrightness+0x2e>
+ 110:	80 e0       	ldi	r24, 0x00	; 0
+ 112:	90 e0       	ldi	r25, 0x00	; 0
+ 114:	06 c0       	rjmp	.+12     	; 0x122 <rightBrightness+0x3a>
+ 116:	c9 01       	movw	r24, r18
+ 118:	21 15       	cp	r18, r1
+ 11a:	31 05       	cpc	r19, r1
+ 11c:	11 f0       	breq	.+4      	; 0x122 <rightBrightness+0x3a>
+ 11e:	81 e0       	ldi	r24, 0x01	; 1
+ 120:	90 e0       	ldi	r25, 0x00	; 0
+ 122:	84 17       	cp	r24, r20
+ 124:	95 07       	cpc	r25, r21
+ 126:	80 f3       	brcs	.-32     	; 0x108 <rightBrightness+0x20>
+        sei();
+ 128:	78 94       	sei
+       
+        return bright;
+}
+ 12a:	c9 01       	movw	r24, r18
+ 12c:	08 95       	ret
+
+0000012e <rightIsWhite>:
+       
+        return bright;
+}
+
+unsigned int rightIsWhite(){
+        return rightBrightness() < black;
+ 12e:	0e 94 74 00 	call	0xe8	; 0xe8 <rightBrightness>
+ 132:	40 e0       	ldi	r20, 0x00	; 0
+ 134:	50 e0       	ldi	r21, 0x00	; 0
+ 136:	20 91 00 01 	lds	r18, 0x0100
+ 13a:	30 91 01 01 	lds	r19, 0x0101
+ 13e:	82 17       	cp	r24, r18
+ 140:	93 07       	cpc	r25, r19
+ 142:	10 f4       	brcc	.+4      	; 0x148 <rightIsWhite+0x1a>
+ 144:	41 e0       	ldi	r20, 0x01	; 1
+ 146:	50 e0       	ldi	r21, 0x00	; 0
+}
+ 148:	ca 01       	movw	r24, r20
+ 14a:	08 95       	ret
+
+0000014c <initQTI>:
+#include "QTISensor.h"
+
+static unsigned int black;
+
+/* initialize QTI input pins and set black color according to initial input */
+void initQTI(){
+ 14c:	0f 93       	push	r16
+ 14e:	1f 93       	push	r17
+        QTI_DDR |= (1<<LR);
+ 150:	20 9a       	sbi	0x04, 0	; 4
+        QTI_PORT &= ~(1<<LR);
+ 152:	28 98       	cbi	0x05, 0	; 5
+
+        QTI_DDR |= (1<<RR);
+ 154:	21 9a       	sbi	0x04, 1	; 4
+        QTI_PORT &= ~(1<<RR);
+ 156:	29 98       	cbi	0x05, 1	; 5
+
+		black = MAX_BLACK;
+ 158:	88 e8       	ldi	r24, 0x88	; 136
+ 15a:	93 e1       	ldi	r25, 0x13	; 19
+ 15c:	90 93 01 01 	sts	0x0101, r25
+ 160:	80 93 00 01 	sts	0x0100, r24
+        black = (rightBrightness()+leftBrightness());
+ 164:	0e 94 74 00 	call	0xe8	; 0xe8 <rightBrightness>
+ 168:	8c 01       	movw	r16, r24
+ 16a:	0e 94 42 00 	call	0x84	; 0x84 <leftBrightness>
+ 16e:	08 0f       	add	r16, r24
+ 170:	19 1f       	adc	r17, r25
+ 172:	10 93 01 01 	sts	0x0101, r17
+ 176:	00 93 00 01 	sts	0x0100, r16
+}
+ 17a:	1f 91       	pop	r17
+ 17c:	0f 91       	pop	r16
+ 17e:	08 95       	ret
+
+00000180 <initTimer>:
+#include "timer.h"
+
+volatile int ms = 0;
+
+void initTimer(){
+	cli();
+ 180:	f8 94       	cli
+
+	ms = 0;
+ 182:	10 92 03 01 	sts	0x0103, r1
+ 186:	10 92 02 01 	sts	0x0102, r1
+	TCCR2A = 0;	
+ 18a:	e0 eb       	ldi	r30, 0xB0	; 176
+ 18c:	f0 e0       	ldi	r31, 0x00	; 0
+ 18e:	10 82       	st	Z, r1
+	TCCR2A |= (1 << WGM21) | (0 << WGM20); // CTC, clear on compare match	
+ 190:	80 81       	ld	r24, Z
+ 192:	88 60       	ori	r24, 0x08	; 8
+ 194:	80 83       	st	Z, r24
+	TIMSK2 |= (1 << OCIE2A); // OCR interrupt enable	
+ 196:	e0 e7       	ldi	r30, 0x70	; 112
+ 198:	f0 e0       	ldi	r31, 0x00	; 0
+ 19a:	80 81       	ld	r24, Z
+ 19c:	82 60       	ori	r24, 0x02	; 2
+ 19e:	80 83       	st	Z, r24
+	ASSR |= (1 << AS2); // setting asynchronous clock	
+ 1a0:	e6 eb       	ldi	r30, 0xB6	; 182
+ 1a2:	f0 e0       	ldi	r31, 0x00	; 0
+ 1a4:	80 81       	ld	r24, Z
+ 1a6:	88 60       	ori	r24, 0x08	; 8
+ 1a8:	80 83       	st	Z, r24
+	OCR2A = 1; // 1024 Hz
+ 1aa:	81 e0       	ldi	r24, 0x01	; 1
+ 1ac:	80 93 b3 00 	sts	0x00B3, r24
+	TCNT2 = 0;
+ 1b0:	10 92 b2 00 	sts	0x00B2, r1
+
+	sei();
+ 1b4:	78 94       	sei
+}
+ 1b6:	08 95       	ret
+
+000001b8 <startTimer>:
+
+void startTimer(){
+	cli();
+ 1b8:	f8 94       	cli
+
+	ms = 0;
+ 1ba:	10 92 03 01 	sts	0x0103, r1
+ 1be:	10 92 02 01 	sts	0x0102, r1
+	// 1024Hz...
+	TCCR2A &= ~(1 << CS22);
+ 1c2:	e0 eb       	ldi	r30, 0xB0	; 176
+ 1c4:	f0 e0       	ldi	r31, 0x00	; 0
+ 1c6:	80 81       	ld	r24, Z
+ 1c8:	8b 7f       	andi	r24, 0xFB	; 251
+ 1ca:	80 83       	st	Z, r24
+	TCCR2A |= (0 << CS22) | (1 << CS21) | (1 << CS20);
+ 1cc:	80 81       	ld	r24, Z
+ 1ce:	83 60       	ori	r24, 0x03	; 3
+ 1d0:	80 83       	st	Z, r24
+	TCNT0 = 0;
+ 1d2:	16 bc       	out	0x26, r1	; 38
+
+	sei();
+ 1d4:	78 94       	sei
+}
+ 1d6:	08 95       	ret
+
+000001d8 <stopTimer>:
+
+void stopTimer(){
+	cli();
+ 1d8:	f8 94       	cli
+
+	TCCR2A &= ~(1 << CS22 | 1 << CS21 | 1 << CS20);
+ 1da:	e0 eb       	ldi	r30, 0xB0	; 176
+ 1dc:	f0 e0       	ldi	r31, 0x00	; 0
+ 1de:	80 81       	ld	r24, Z
+ 1e0:	88 7f       	andi	r24, 0xF8	; 248
+ 1e2:	80 83       	st	Z, r24
+	
+	sei();
+ 1e4:	78 94       	sei
+}
+ 1e6:	08 95       	ret
+
+000001e8 <__vector_4>:
+
+ISR(TIMER2_COMP_vect){
+ 1e8:	1f 92       	push	r1
+ 1ea:	0f 92       	push	r0
+ 1ec:	0f b6       	in	r0, 0x3f	; 63
+ 1ee:	0f 92       	push	r0
+ 1f0:	11 24       	eor	r1, r1
+ 1f2:	8f 93       	push	r24
+ 1f4:	9f 93       	push	r25
+	ms += 2;
+ 1f6:	80 91 02 01 	lds	r24, 0x0102
+ 1fa:	90 91 03 01 	lds	r25, 0x0103
+ 1fe:	02 96       	adiw	r24, 0x02	; 2
+ 200:	90 93 03 01 	sts	0x0103, r25
+ 204:	80 93 02 01 	sts	0x0102, r24
+}
+ 208:	9f 91       	pop	r25
+ 20a:	8f 91       	pop	r24
+ 20c:	0f 90       	pop	r0
+ 20e:	0f be       	out	0x3f, r0	; 63
+ 210:	0f 90       	pop	r0
+ 212:	1f 90       	pop	r1
+ 214:	18 95       	reti
+
+00000216 <delay>:
+	sei();
+	return ret;
+}
+
+/* sleeping for the specified amount of ms */
+void delay(int ms){
+ 216:	0f 93       	push	r16
+ 218:	1f 93       	push	r17
+ 21a:	df 93       	push	r29
+ 21c:	cf 93       	push	r28
+ 21e:	00 d0       	rcall	.+0      	; 0x220 <delay+0xa>
+ 220:	cd b7       	in	r28, 0x3d	; 61
+ 222:	de b7       	in	r29, 0x3e	; 62
+ 224:	8c 01       	movw	r16, r24
+ISR(TIMER2_COMP_vect){
+	ms += 2;
+}
+
+static inline int timerRunning(){
+	return TCCR2A & (1 << CS22 | 1 << CS21 | 1 << CS20);
+ 226:	80 91 b0 00 	lds	r24, 0x00B0
+}
+
+/* sleeping for the specified amount of ms */
+void delay(int ms){
+	int stop = 0;
+	if (stop == !timerRunning()) startTimer();
+ 22a:	90 e0       	ldi	r25, 0x00	; 0
+ 22c:	87 70       	andi	r24, 0x07	; 7
+ 22e:	90 70       	andi	r25, 0x00	; 0
+ 230:	89 2b       	or	r24, r25
+ 232:	11 f0       	breq	.+4      	; 0x238 <delay+0x22>
+ 234:	0e 94 dc 00 	call	0x1b8	; 0x1b8 <startTimer>
+static inline int timerRunning(){
+	return TCCR2A & (1 << CS22 | 1 << CS21 | 1 << CS20);
+}
+
+static volatile int getMs(){
+	volatile int ret = 0;
+ 238:	1a 82       	std	Y+2, r1	; 0x02
+ 23a:	19 82       	std	Y+1, r1	; 0x01
+	cli();
+ 23c:	f8 94       	cli
+	ret = ms;
+ 23e:	80 91 02 01 	lds	r24, 0x0102
+ 242:	90 91 03 01 	lds	r25, 0x0103
+ 246:	9a 83       	std	Y+2, r25	; 0x02
+ 248:	89 83       	std	Y+1, r24	; 0x01
+	sei();
+ 24a:	78 94       	sei
+	return ret;
+ 24c:	29 81       	ldd	r18, Y+1	; 0x01
+ 24e:	3a 81       	ldd	r19, Y+2	; 0x02
+/* sleeping for the specified amount of ms */
+void delay(int ms){
+	int stop = 0;
+	if (stop == !timerRunning()) startTimer();
+	static int last = 0;
+	last = getMs();
+ 250:	30 93 05 01 	sts	0x0105, r19
+ 254:	20 93 04 01 	sts	0x0104, r18
+ 258:	07 c0       	rjmp	.+14     	; 0x268 <delay+0x52>
+	while ((getMs() - last) < ms) sleep_mode();
+ 25a:	83 b7       	in	r24, 0x33	; 51
+ 25c:	81 60       	ori	r24, 0x01	; 1
+ 25e:	83 bf       	out	0x33, r24	; 51
+ 260:	88 95       	sleep
+ 262:	83 b7       	in	r24, 0x33	; 51
+ 264:	8e 7f       	andi	r24, 0xFE	; 254
+ 266:	83 bf       	out	0x33, r24	; 51
+static inline int timerRunning(){
+	return TCCR2A & (1 << CS22 | 1 << CS21 | 1 << CS20);
+}
+
+static volatile int getMs(){
+	volatile int ret = 0;
+ 268:	1a 82       	std	Y+2, r1	; 0x02
+ 26a:	19 82       	std	Y+1, r1	; 0x01
+	cli();
+ 26c:	f8 94       	cli
+	ret = ms;
+ 26e:	80 91 02 01 	lds	r24, 0x0102
+ 272:	90 91 03 01 	lds	r25, 0x0103
+ 276:	9a 83       	std	Y+2, r25	; 0x02
+ 278:	89 83       	std	Y+1, r24	; 0x01
+	sei();
+ 27a:	78 94       	sei
+	return ret;
+ 27c:	89 81       	ldd	r24, Y+1	; 0x01
+ 27e:	9a 81       	ldd	r25, Y+2	; 0x02
+void delay(int ms){
+	int stop = 0;
+	if (stop == !timerRunning()) startTimer();
+	static int last = 0;
+	last = getMs();
+	while ((getMs() - last) < ms) sleep_mode();
+ 280:	82 1b       	sub	r24, r18
+ 282:	93 0b       	sbc	r25, r19
+ 284:	80 17       	cp	r24, r16
+ 286:	91 07       	cpc	r25, r17
+ 288:	44 f3       	brlt	.-48     	; 0x25a <delay+0x44>
+	if (stop) stopTimer();
+}
+ 28a:	0f 90       	pop	r0
+ 28c:	0f 90       	pop	r0
+ 28e:	cf 91       	pop	r28
+ 290:	df 91       	pop	r29
+ 292:	1f 91       	pop	r17
+ 294:	0f 91       	pop	r16
+ 296:	08 95       	ret
+
+00000298 <initEmittors>:
+*/
+#include "IRSensor.h"
+
+/* initialize emittors */
+void initEmittors(){
+	cli();	
+ 298:	f8 94       	cli
+
+    DDRB |= 1<<PB4; // OC0A as output for IR LEDs
+ 29a:	24 9a       	sbi	0x04, 4	; 4
+	TCCR0A = 0;
+ 29c:	14 bc       	out	0x24, r1	; 36
+    TCCR0A |= 1<<WGM01 | 1<<COM0A0; // CTC mode and set OC0A to toggle on compare match
+ 29e:	84 b5       	in	r24, 0x24	; 36
+ 2a0:	88 61       	ori	r24, 0x18	; 24
+ 2a2:	84 bd       	out	0x24, r24	; 36
+    OCR0A = SENSITIVITY;
+ 2a4:	84 e6       	ldi	r24, 0x64	; 100
+ 2a6:	87 bd       	out	0x27, r24	; 39
+
+	sei();
+ 2a8:	78 94       	sei
+}
+ 2aa:	08 95       	ret
+
+000002ac <stopIR>:
+
+/* stop the IR LEDs */
+void stopIR(){
+	TCCR0A &= ~(1 << CS02 | 1 << CS01 | 1 << CS00); // switch Timer 0 off
+ 2ac:	84 b5       	in	r24, 0x24	; 36
+ 2ae:	88 7f       	andi	r24, 0xF8	; 248
+ 2b0:	84 bd       	out	0x24, r24	; 36
+}
+ 2b2:	08 95       	ret
+
+000002b4 <startIR>:
+
+/* start the IR LEDs */
+void startIR(){
+	TCNT0 = 0;
+ 2b4:	16 bc       	out	0x26, r1	; 38
+	TCCR0A |= 1<<CS00; // no prescaler
+ 2b6:	84 b5       	in	r24, 0x24	; 36
+ 2b8:	81 60       	ori	r24, 0x01	; 1
+ 2ba:	84 bd       	out	0x24, r24	; 36
+}
+ 2bc:	08 95       	ret
+
+000002be <initDetectors>:
+
+/* initialize detectors (just setting as input) */
+void initDetectors(){
+    DDR &= ~(1 << RIGHT | 1 << LEFT); 
+ 2be:	8a b1       	in	r24, 0x0a	; 10
+ 2c0:	8a 7f       	andi	r24, 0xFA	; 250
+ 2c2:	8a b9       	out	0x0a, r24	; 10
+}
+ 2c4:	08 95       	ret
+
+000002c6 <objectLeft>:
+	}
+	return hits >= BORDERVALUE;
+}
+
+/* 1, if left IR detected an object, 0 otherwise */
+int objectLeft(){
+ 2c6:	0f 93       	push	r16
+ 2c8:	1f 93       	push	r17
+ 2ca:	cf 93       	push	r28
+ 2cc:	df 93       	push	r29
+ 2ce:	00 e0       	ldi	r16, 0x00	; 0
+ 2d0:	10 e0       	ldi	r17, 0x00	; 0
+ 2d2:	c0 e0       	ldi	r28, 0x00	; 0
+ 2d4:	d0 e0       	ldi	r29, 0x00	; 0
+	TCCR0A &= ~(1 << CS02 | 1 << CS01 | 1 << CS00); // switch Timer 0 off
+}
+
+/* start the IR LEDs */
+void startIR(){
+	TCNT0 = 0;
+ 2d6:	16 bc       	out	0x26, r1	; 38
+	TCCR0A |= 1<<CS00; // no prescaler
+ 2d8:	84 b5       	in	r24, 0x24	; 36
+ 2da:	81 60       	ori	r24, 0x01	; 1
+ 2dc:	84 bd       	out	0x24, r24	; 36
+/* 1, if left IR detected an object, 0 otherwise */
+int objectLeft(){
+	int hits = 0;
+	for (int i = 0; i < SAMPLES; i++){
+		startIR();
+		delay(1);
+ 2de:	81 e0       	ldi	r24, 0x01	; 1
+ 2e0:	90 e0       	ldi	r25, 0x00	; 0
+ 2e2:	0e 94 0b 01 	call	0x216	; 0x216 <delay>
+	sei();
+}
+
+/* stop the IR LEDs */
+void stopIR(){
+	TCCR0A &= ~(1 << CS02 | 1 << CS01 | 1 << CS00); // switch Timer 0 off
+ 2e6:	84 b5       	in	r24, 0x24	; 36
+ 2e8:	88 7f       	andi	r24, 0xF8	; 248
+ 2ea:	84 bd       	out	0x24, r24	; 36
+	int hits = 0;
+	for (int i = 0; i < SAMPLES; i++){
+		startIR();
+		delay(1);
+		stopIR();
+		if(bit_is_clear(PIN, LEFT)) hits++;
+ 2ec:	4a 99       	sbic	0x09, 2	; 9
+ 2ee:	02 c0       	rjmp	.+4      	; 0x2f4 <objectLeft+0x2e>
+ 2f0:	0f 5f       	subi	r16, 0xFF	; 255
+ 2f2:	1f 4f       	sbci	r17, 0xFF	; 255
+		delay(1);
+ 2f4:	81 e0       	ldi	r24, 0x01	; 1
+ 2f6:	90 e0       	ldi	r25, 0x00	; 0
+ 2f8:	0e 94 0b 01 	call	0x216	; 0x216 <delay>
+}
+
+/* 1, if left IR detected an object, 0 otherwise */
+int objectLeft(){
+	int hits = 0;
+	for (int i = 0; i < SAMPLES; i++){
+ 2fc:	21 96       	adiw	r28, 0x01	; 1
+ 2fe:	c5 30       	cpi	r28, 0x05	; 5
+ 300:	d1 05       	cpc	r29, r1
+ 302:	49 f7       	brne	.-46     	; 0x2d6 <objectLeft+0x10>
+ 304:	20 e0       	ldi	r18, 0x00	; 0
+ 306:	30 e0       	ldi	r19, 0x00	; 0
+ 308:	04 30       	cpi	r16, 0x04	; 4
+ 30a:	11 05       	cpc	r17, r1
+ 30c:	14 f0       	brlt	.+4      	; 0x312 <objectLeft+0x4c>
+ 30e:	21 e0       	ldi	r18, 0x01	; 1
+ 310:	30 e0       	ldi	r19, 0x00	; 0
+		stopIR();
+		if(bit_is_clear(PIN, LEFT)) hits++;
+		delay(1);
+	}
+	return hits >= BORDERVALUE;
+}
+ 312:	c9 01       	movw	r24, r18
+ 314:	df 91       	pop	r29
+ 316:	cf 91       	pop	r28
+ 318:	1f 91       	pop	r17
+ 31a:	0f 91       	pop	r16
+ 31c:	08 95       	ret
+
+0000031e <objectRight>:
+void initDetectors(){
+    DDR &= ~(1 << RIGHT | 1 << LEFT); 
+}
+
+/* 1, if right IR detected an object, 0 otherwise */
+int objectRight(){
+ 31e:	0f 93       	push	r16
+ 320:	1f 93       	push	r17
+ 322:	cf 93       	push	r28
+ 324:	df 93       	push	r29
+ 326:	00 e0       	ldi	r16, 0x00	; 0
+ 328:	10 e0       	ldi	r17, 0x00	; 0
+ 32a:	c0 e0       	ldi	r28, 0x00	; 0
+ 32c:	d0 e0       	ldi	r29, 0x00	; 0
+	TCCR0A &= ~(1 << CS02 | 1 << CS01 | 1 << CS00); // switch Timer 0 off
+}
+
+/* start the IR LEDs */
+void startIR(){
+	TCNT0 = 0;
+ 32e:	16 bc       	out	0x26, r1	; 38
+	TCCR0A |= 1<<CS00; // no prescaler
+ 330:	84 b5       	in	r24, 0x24	; 36
+ 332:	81 60       	ori	r24, 0x01	; 1
+ 334:	84 bd       	out	0x24, r24	; 36
+/* 1, if right IR detected an object, 0 otherwise */
+int objectRight(){
+	int hits = 0;
+	for (int i = 0; i < SAMPLES; i++){ // multiple samples for evaluation
+		startIR();
+		delay(1);
+ 336:	81 e0       	ldi	r24, 0x01	; 1
+ 338:	90 e0       	ldi	r25, 0x00	; 0
+ 33a:	0e 94 0b 01 	call	0x216	; 0x216 <delay>
+	sei();
+}
+
+/* stop the IR LEDs */
+void stopIR(){
+	TCCR0A &= ~(1 << CS02 | 1 << CS01 | 1 << CS00); // switch Timer 0 off
+ 33e:	84 b5       	in	r24, 0x24	; 36
+ 340:	88 7f       	andi	r24, 0xF8	; 248
+ 342:	84 bd       	out	0x24, r24	; 36
+	int hits = 0;
+	for (int i = 0; i < SAMPLES; i++){ // multiple samples for evaluation
+		startIR();
+		delay(1);
+		stopIR();
+		if(bit_is_clear(PIN, RIGHT)) hits++;
+ 344:	48 99       	sbic	0x09, 0	; 9
+ 346:	02 c0       	rjmp	.+4      	; 0x34c <objectRight+0x2e>
+ 348:	0f 5f       	subi	r16, 0xFF	; 255
+ 34a:	1f 4f       	sbci	r17, 0xFF	; 255
+		delay(1);
+ 34c:	81 e0       	ldi	r24, 0x01	; 1
+ 34e:	90 e0       	ldi	r25, 0x00	; 0
+ 350:	0e 94 0b 01 	call	0x216	; 0x216 <delay>
+}
+
+/* 1, if right IR detected an object, 0 otherwise */
+int objectRight(){
+	int hits = 0;
+	for (int i = 0; i < SAMPLES; i++){ // multiple samples for evaluation
+ 354:	21 96       	adiw	r28, 0x01	; 1
+ 356:	c5 30       	cpi	r28, 0x05	; 5
+ 358:	d1 05       	cpc	r29, r1
+ 35a:	49 f7       	brne	.-46     	; 0x32e <objectRight+0x10>
+ 35c:	20 e0       	ldi	r18, 0x00	; 0
+ 35e:	30 e0       	ldi	r19, 0x00	; 0
+ 360:	04 30       	cpi	r16, 0x04	; 4
+ 362:	11 05       	cpc	r17, r1
+ 364:	14 f0       	brlt	.+4      	; 0x36a <objectRight+0x4c>
+ 366:	21 e0       	ldi	r18, 0x01	; 1
+ 368:	30 e0       	ldi	r19, 0x00	; 0
+		stopIR();
+		if(bit_is_clear(PIN, RIGHT)) hits++;
+		delay(1);
+	}
+	return hits >= BORDERVALUE;
+}
+ 36a:	c9 01       	movw	r24, r18
+ 36c:	df 91       	pop	r29
+ 36e:	cf 91       	pop	r28
+ 370:	1f 91       	pop	r17
+ 372:	0f 91       	pop	r16
+ 374:	08 95       	ret
+
+00000376 <setServos>:
+ 	TCCR1B |= ((0<<CS12) | (1<<CS11) | (0<<CS10));	// set Prescaler
+}
+
+/* setting the OCR values for servos - servo=0: right, servo=1: left */
+void setServos(unsigned int servo, unsigned int duty){
+	if (duty > MAXSPEED) duty = MAXSPEED;
+ 376:	23 e0       	ldi	r18, 0x03	; 3
+ 378:	69 3e       	cpi	r22, 0xE9	; 233
+ 37a:	72 07       	cpc	r23, r18
+ 37c:	18 f0       	brcs	.+6      	; 0x384 <setServos+0xe>
+ 37e:	68 ee       	ldi	r22, 0xE8	; 232
+ 380:	73 e0       	ldi	r23, 0x03	; 3
+ 382:	06 c0       	rjmp	.+12     	; 0x390 <setServos+0x1a>
+ 	if (duty < MINSPEED) duty = MINSPEED;
+ 384:	21 e0       	ldi	r18, 0x01	; 1
+ 386:	64 3f       	cpi	r22, 0xF4	; 244
+ 388:	72 07       	cpc	r23, r18
+ 38a:	10 f4       	brcc	.+4      	; 0x390 <setServos+0x1a>
+ 38c:	64 ef       	ldi	r22, 0xF4	; 244
+ 38e:	71 e0       	ldi	r23, 0x01	; 1
+ 		
+ 	if(servo==0){
+ 390:	00 97       	sbiw	r24, 0x00	; 0
+ 392:	29 f4       	brne	.+10     	; 0x39e <setServos+0x28>
+ 			RIGHT_HIGH = duty >> 8;
+ 394:	70 93 89 00 	sts	0x0089, r23
+ 			RIGHT_LOW = duty & (TOPVALUE);
+ 398:	60 93 88 00 	sts	0x0088, r22
+ 39c:	08 95       	ret
+ 	}
+ 	if(servo==1){
+ 39e:	01 97       	sbiw	r24, 0x01	; 1
+ 3a0:	21 f4       	brne	.+8      	; 0x3aa <setServos+0x34>
+ 			LEFT_HIGH = duty >> 8;
+ 3a2:	70 93 8b 00 	sts	0x008B, r23
+ 			LEFT_LOW = duty & (TOPVALUE);
+ 3a6:	60 93 8a 00 	sts	0x008A, r22
+ 3aa:	08 95       	ret
+
+000003ac <setMotorSpeed>:
+ 	}
+}
+
+/* setting the speed of both motors (left goes to other direction, thus has to be inverted!) */
+void setMotorSpeed(int leftSpeed,int rightSpeed){
+ 3ac:	ef 92       	push	r14
+ 3ae:	ff 92       	push	r15
+ 3b0:	0f 93       	push	r16
+ 3b2:	1f 93       	push	r17
+ 3b4:	8c 01       	movw	r16, r24
+	leftSpeed = -leftSpeed;
+
+	setServos(0, NOMOVE + (((int)rightSpeed * SPEEDRANGE) / DUTYCONST));
+ 3b6:	84 ef       	ldi	r24, 0xF4	; 244
+ 3b8:	e8 2e       	mov	r14, r24
+ 3ba:	81 e0       	ldi	r24, 0x01	; 1
+ 3bc:	f8 2e       	mov	r15, r24
+ 3be:	6e 9d       	mul	r22, r14
+ 3c0:	c0 01       	movw	r24, r0
+ 3c2:	6f 9d       	mul	r22, r15
+ 3c4:	90 0d       	add	r25, r0
+ 3c6:	7e 9d       	mul	r23, r14
+ 3c8:	90 0d       	add	r25, r0
+ 3ca:	11 24       	eor	r1, r1
+ 3cc:	68 ec       	ldi	r22, 0xC8	; 200
+ 3ce:	70 e0       	ldi	r23, 0x00	; 0
+ 3d0:	0e 94 59 03 	call	0x6b2	; 0x6b2 <__divmodhi4>
+ 3d4:	62 51       	subi	r22, 0x12	; 18
+ 3d6:	7d 4f       	sbci	r23, 0xFD	; 253
+ 3d8:	80 e0       	ldi	r24, 0x00	; 0
+ 3da:	90 e0       	ldi	r25, 0x00	; 0
+ 3dc:	0e 94 bb 01 	call	0x376	; 0x376 <setServos>
+	setServos(1, NOMOVE + (((int)leftSpeed * SPEEDRANGE) / DUTYCONST));
+ 3e0:	10 95       	com	r17
+ 3e2:	01 95       	neg	r16
+ 3e4:	1f 4f       	sbci	r17, 0xFF	; 255
+ 3e6:	0e 9d       	mul	r16, r14
+ 3e8:	c0 01       	movw	r24, r0
+ 3ea:	0f 9d       	mul	r16, r15
+ 3ec:	90 0d       	add	r25, r0
+ 3ee:	1e 9d       	mul	r17, r14
+ 3f0:	90 0d       	add	r25, r0
+ 3f2:	11 24       	eor	r1, r1
+ 3f4:	68 ec       	ldi	r22, 0xC8	; 200
+ 3f6:	70 e0       	ldi	r23, 0x00	; 0
+ 3f8:	0e 94 59 03 	call	0x6b2	; 0x6b2 <__divmodhi4>
+ 3fc:	62 51       	subi	r22, 0x12	; 18
+ 3fe:	7d 4f       	sbci	r23, 0xFD	; 253
+ 400:	81 e0       	ldi	r24, 0x01	; 1
+ 402:	90 e0       	ldi	r25, 0x00	; 0
+ 404:	0e 94 bb 01 	call	0x376	; 0x376 <setServos>
+}
+ 408:	1f 91       	pop	r17
+ 40a:	0f 91       	pop	r16
+ 40c:	ff 90       	pop	r15
+ 40e:	ef 90       	pop	r14
+ 410:	08 95       	ret
+
+00000412 <initServos>:
+/*
+	Authors: Davide Berdin, Till Riemer
+*/
+#include "servos.h"
+
+void initServos(){
+ 412:	ef 92       	push	r14
+ 414:	ff 92       	push	r15
+ 416:	0f 93       	push	r16
+ 418:	1f 93       	push	r17
+	// Timer 1, cycle lasts 20ms, Prescaler is 8
+
+ 	TCCR1A = 0;
+ 41a:	00 e8       	ldi	r16, 0x80	; 128
+ 41c:	10 e0       	ldi	r17, 0x00	; 0
+ 41e:	f8 01       	movw	r30, r16
+ 420:	10 82       	st	Z, r1
+ 	TCCR1B = 0;
+ 422:	91 e8       	ldi	r25, 0x81	; 129
+ 424:	e9 2e       	mov	r14, r25
+ 426:	f1 2c       	mov	r15, r1
+ 428:	f7 01       	movw	r30, r14
+ 42a:	10 82       	st	Z, r1
+ 		
+	// initialize servo pins
+ 	DDRB |= (1<<PB5) | (1<<PB6);
+ 42c:	84 b1       	in	r24, 0x04	; 4
+ 42e:	80 66       	ori	r24, 0x60	; 96
+ 430:	84 b9       	out	0x04, r24	; 4
+ 		
+ 	// set ICR value
+ 	ICR1H = ICRVALUE >> 8;
+ 432:	87 e2       	ldi	r24, 0x27	; 39
+ 434:	80 93 87 00 	sts	0x0087, r24
+ 	ICR1L = ICRVALUE & (TOPVALUE);
+ 438:	80 e1       	ldi	r24, 0x10	; 16
+ 43a:	80 93 86 00 	sts	0x0086, r24
+ 		
+	// initially no movement
+ 	setMotorSpeed(0,0);
+ 43e:	80 e0       	ldi	r24, 0x00	; 0
+ 440:	90 e0       	ldi	r25, 0x00	; 0
+ 442:	60 e0       	ldi	r22, 0x00	; 0
+ 444:	70 e0       	ldi	r23, 0x00	; 0
+ 446:	0e 94 d6 01 	call	0x3ac	; 0x3ac <setMotorSpeed>
+ 		
+ 	TCCR1A |= (1<<COM1A1);	
+ 44a:	f8 01       	movw	r30, r16
+ 44c:	80 81       	ld	r24, Z
+ 44e:	80 68       	ori	r24, 0x80	; 128
+ 450:	80 83       	st	Z, r24
+ 	TCCR1A |= (1<<COM1B1);		
+ 452:	80 81       	ld	r24, Z
+ 454:	80 62       	ori	r24, 0x20	; 32
+ 456:	80 83       	st	Z, r24
+ 		
+ 	TCCR1B |= (1<<WGM13);						
+ 458:	f7 01       	movw	r30, r14
+ 45a:	80 81       	ld	r24, Z
+ 45c:	80 61       	ori	r24, 0x10	; 16
+ 45e:	80 83       	st	Z, r24
+ 	TCCR1B |= ((0<<CS12) | (1<<CS11) | (0<<CS10));	// set Prescaler
+ 460:	80 81       	ld	r24, Z
+ 462:	82 60       	ori	r24, 0x02	; 2
+ 464:	80 83       	st	Z, r24
+}
+ 466:	1f 91       	pop	r17
+ 468:	0f 91       	pop	r16
+ 46a:	ff 90       	pop	r15
+ 46c:	ef 90       	pop	r14
+ 46e:	08 95       	ret
+
+00000470 <init>:
+}
+
+
+/* initialize the system clock (8Mhz) */
+void init(){
+	cli();
+ 470:	f8 94       	cli
+
+	// enable clock prescaler changing and set to no scaling
+	CLKPR = 0;
+ 472:	e1 e6       	ldi	r30, 0x61	; 97
+ 474:	f0 e0       	ldi	r31, 0x00	; 0
+ 476:	10 82       	st	Z, r1
+	CLKPR |= (1 << CLKPCE);
+ 478:	80 81       	ld	r24, Z
+ 47a:	80 68       	ori	r24, 0x80	; 128
+ 47c:	80 83       	st	Z, r24
+	CLKPR |= (0 << CLKPS3) | (0 << CLKPS2) | (0 << CLKPS1) | (0 << CLKPS0);
+ 47e:	80 81       	ld	r24, Z
+ 480:	80 83       	st	Z, r24
+
+	sei();
+ 482:	78 94       	sei
+}
+ 484:	08 95       	ret
+
+00000486 <mainLoop>:
+
+int mainLoop(){
+ 486:	6f 92       	push	r6
+ 488:	7f 92       	push	r7
+ 48a:	8f 92       	push	r8
+ 48c:	9f 92       	push	r9
+ 48e:	af 92       	push	r10
+ 490:	bf 92       	push	r11
+ 492:	cf 92       	push	r12
+ 494:	df 92       	push	r13
+ 496:	ef 92       	push	r14
+ 498:	ff 92       	push	r15
+ 49a:	0f 93       	push	r16
+ 49c:	1f 93       	push	r17
+ 49e:	cf 93       	push	r28
+ 4a0:	df 93       	push	r29
+ 4a2:	ee 24       	eor	r14, r14
+ 4a4:	ff 24       	eor	r15, r15
+ 4a6:	aa 24       	eor	r10, r10
+ 4a8:	bb 24       	eor	r11, r11
+ 4aa:	cc 24       	eor	r12, r12
+ 4ac:	dd 24       	eor	r13, r13
+	unsigned int i=0; // movement amount since last left-right change
+
+
+	while(1){
+		// get sensor data
+		oppRight 	=	objectRight();
+ 4ae:	0e 94 8f 01 	call	0x31e	; 0x31e <objectRight>
+ 4b2:	3c 01       	movw	r6, r24
+		oppLeft 	=	objectLeft();
+ 4b4:	0e 94 63 01 	call	0x2c6	; 0x2c6 <objectLeft>
+ 4b8:	4c 01       	movw	r8, r24
+		lineAtLeft 	=	leftIsWhite();
+ 4ba:	0e 94 65 00 	call	0xca	; 0xca <leftIsWhite>
+ 4be:	8c 01       	movw	r16, r24
+		lineAtRight	= 	rightIsWhite();
+ 4c0:	0e 94 97 00 	call	0x12e	; 0x12e <rightIsWhite>
+ 4c4:	ec 01       	movw	r28, r24
+
+
+		// checking and reacting on lines...
+		if (lineAtLeft==1){
+ 4c6:	01 30       	cpi	r16, 0x01	; 1
+ 4c8:	11 05       	cpc	r17, r1
+ 4ca:	99 f4       	brne	.+38     	; 0x4f2 <mainLoop+0x6c>
+			if(enemySpotted==0){
+ 4cc:	e1 14       	cp	r14, r1
+ 4ce:	f1 04       	cpc	r15, r1
+ 4d0:	81 f4       	brne	.+32     	; 0x4f2 <mainLoop+0x6c>
+				moveBackward(100);
+ 4d2:	84 e6       	ldi	r24, 0x64	; 100
+ 4d4:	90 e0       	ldi	r25, 0x00	; 0
+ 4d6:	0e 94 1f 03 	call	0x63e	; 0x63e <moveBackward>
+				delay(700);
+ 4da:	8c eb       	ldi	r24, 0xBC	; 188
+ 4dc:	92 e0       	ldi	r25, 0x02	; 2
+ 4de:	0e 94 0b 01 	call	0x216	; 0x216 <delay>
+				turnRight(100);
+ 4e2:	84 e6       	ldi	r24, 0x64	; 100
+ 4e4:	90 e0       	ldi	r25, 0x00	; 0
+ 4e6:	0e 94 0d 03 	call	0x61a	; 0x61a <turnRight>
+				delay(700);
+ 4ea:	8c eb       	ldi	r24, 0xBC	; 188
+ 4ec:	92 e0       	ldi	r25, 0x02	; 2
+ 4ee:	0e 94 0b 01 	call	0x216	; 0x216 <delay>
+			}
+		} 
+		if (lineAtRight==1){
+ 4f2:	c1 30       	cpi	r28, 0x01	; 1
+ 4f4:	d1 05       	cpc	r29, r1
+ 4f6:	99 f4       	brne	.+38     	; 0x51e <__stack+0x1f>
+			if(enemySpotted==0){
+ 4f8:	e1 14       	cp	r14, r1
+ 4fa:	f1 04       	cpc	r15, r1
+ 4fc:	81 f4       	brne	.+32     	; 0x51e <__stack+0x1f>
+				moveBackward(100);
+ 4fe:	84 e6       	ldi	r24, 0x64	; 100
+ 500:	90 e0       	ldi	r25, 0x00	; 0
+ 502:	0e 94 1f 03 	call	0x63e	; 0x63e <moveBackward>
+				delay(700);
+ 506:	8c eb       	ldi	r24, 0xBC	; 188
+ 508:	92 e0       	ldi	r25, 0x02	; 2
+ 50a:	0e 94 0b 01 	call	0x216	; 0x216 <delay>
+				turnLeft(100);
+ 50e:	84 e6       	ldi	r24, 0x64	; 100
+ 510:	90 e0       	ldi	r25, 0x00	; 0
+ 512:	0e 94 1a 03 	call	0x634	; 0x634 <turnLeft>
+				delay(700);
+ 516:	8c eb       	ldi	r24, 0xBC	; 188
+ 518:	92 e0       	ldi	r25, 0x02	; 2
+ 51a:	0e 94 0b 01 	call	0x216	; 0x216 <delay>
+			}
+		}
+		if(lineAtLeft==0 && lineAtRight==0){
+ 51e:	01 2b       	or	r16, r17
+ 520:	31 f6       	brne	.-116    	; 0x4ae <mainLoop+0x28>
+ 522:	cd 2b       	or	r28, r29
+ 524:	21 f6       	brne	.-120    	; 0x4ae <mainLoop+0x28>
+			// when no white line, reacting on enemies...		
+
+			if (!oppRight && !oppLeft){			// no enemies detected, use last known values
+ 526:	67 28       	or	r6, r7
+ 528:	71 f5       	brne	.+92     	; 0x586 <__stack+0x87>
+ 52a:	89 28       	or	r8, r9
+ 52c:	c1 f5       	brne	.+112    	; 0x59e <__stack+0x9f>
+				enemySpotted = 0;
+				if(i>3){						// change movement direction after 3 times
+ 52e:	84 e0       	ldi	r24, 0x04	; 4
+ 530:	c8 16       	cp	r12, r24
+ 532:	d1 04       	cpc	r13, r1
+ 534:	78 f0       	brcs	.+30     	; 0x554 <__stack+0x55>
+					(movement==1)?(movement=0):(movement=1);
+ 536:	81 e0       	ldi	r24, 0x01	; 1
+ 538:	a8 16       	cp	r10, r24
+ 53a:	b1 04       	cpc	r11, r1
+ 53c:	31 f0       	breq	.+12     	; 0x54a <__stack+0x4b>
+ 53e:	91 e0       	ldi	r25, 0x01	; 1
+ 540:	a9 2e       	mov	r10, r25
+ 542:	b1 2c       	mov	r11, r1
+ 544:	cc 24       	eor	r12, r12
+ 546:	dd 24       	eor	r13, r13
+ 548:	10 c0       	rjmp	.+32     	; 0x56a <__stack+0x6b>
+ 54a:	aa 24       	eor	r10, r10
+ 54c:	bb 24       	eor	r11, r11
+ 54e:	cc 24       	eor	r12, r12
+ 550:	dd 24       	eor	r13, r13
+ 552:	03 c0       	rjmp	.+6      	; 0x55a <__stack+0x5b>
+					i=0;
+				}
+				if(movement==0) turnLeft(100);
+ 554:	a1 14       	cp	r10, r1
+ 556:	b1 04       	cpc	r11, r1
+ 558:	21 f4       	brne	.+8      	; 0x562 <__stack+0x63>
+ 55a:	84 e6       	ldi	r24, 0x64	; 100
+ 55c:	90 e0       	ldi	r25, 0x00	; 0
+ 55e:	0e 94 1a 03 	call	0x634	; 0x634 <turnLeft>
+				if(movement==1)	turnRight(100);
+ 562:	81 e0       	ldi	r24, 0x01	; 1
+ 564:	a8 16       	cp	r10, r24
+ 566:	b1 04       	cpc	r11, r1
+ 568:	21 f4       	brne	.+8      	; 0x572 <__stack+0x73>
+ 56a:	84 e6       	ldi	r24, 0x64	; 100
+ 56c:	90 e0       	ldi	r25, 0x00	; 0
+ 56e:	0e 94 0d 03 	call	0x61a	; 0x61a <turnRight>
+				delay(100);
+ 572:	84 e6       	ldi	r24, 0x64	; 100
+ 574:	90 e0       	ldi	r25, 0x00	; 0
+ 576:	0e 94 0b 01 	call	0x216	; 0x216 <delay>
+				i++;
+ 57a:	08 94       	sec
+ 57c:	c1 1c       	adc	r12, r1
+ 57e:	d1 1c       	adc	r13, r1
+ 580:	ee 24       	eor	r14, r14
+ 582:	ff 24       	eor	r15, r15
+ 584:	94 cf       	rjmp	.-216    	; 0x4ae <mainLoop+0x28>
+			}
+			else if (oppRight && oppLeft){	// enemy at FRONT
+ 586:	89 28       	or	r8, r9
+ 588:	29 f0       	breq	.+10     	; 0x594 <__stack+0x95>
+				enemySpotted = 1;
+				moveForward(100);
+ 58a:	84 e6       	ldi	r24, 0x64	; 100
+ 58c:	90 e0       	ldi	r25, 0x00	; 0
+ 58e:	0e 94 4b 03 	call	0x696	; 0x696 <moveForward>
+ 592:	09 c0       	rjmp	.+18     	; 0x5a6 <__stack+0xa7>
+			} else if (oppRight){			// enemy at RIGHT
+				enemySpotted = 1;
+				turnRight(100);
+ 594:	84 e6       	ldi	r24, 0x64	; 100
+ 596:	90 e0       	ldi	r25, 0x00	; 0
+ 598:	0e 94 0d 03 	call	0x61a	; 0x61a <turnRight>
+ 59c:	04 c0       	rjmp	.+8      	; 0x5a6 <__stack+0xa7>
+			} else if (oppLeft){			// enemy at LEFT
+				enemySpotted = 1;
+				turnLeft(100);
+ 59e:	84 e6       	ldi	r24, 0x64	; 100
+ 5a0:	90 e0       	ldi	r25, 0x00	; 0
+ 5a2:	0e 94 1a 03 	call	0x634	; 0x634 <turnLeft>
+ 5a6:	81 e0       	ldi	r24, 0x01	; 1
+ 5a8:	e8 2e       	mov	r14, r24
+ 5aa:	f1 2c       	mov	r15, r1
+ 5ac:	80 cf       	rjmp	.-256    	; 0x4ae <mainLoop+0x28>
+
+000005ae <main>:
+	Authors: Davide Berdin, Till Riemer
+*/
+#include "sumobot.h"
+
+int main(void){
+	init();
+ 5ae:	0e 94 38 02 	call	0x470	; 0x470 <init>
+	initTimer();
+ 5b2:	0e 94 c0 00 	call	0x180	; 0x180 <initTimer>
+	initLED();
+ 5b6:	0e 94 ee 02 	call	0x5dc	; 0x5dc <initLED>
+	initServos();
+ 5ba:	0e 94 09 02 	call	0x412	; 0x412 <initServos>
+	initQTI();	
+ 5be:	0e 94 a6 00 	call	0x14c	; 0x14c <initQTI>
+	initEmittors();
+ 5c2:	0e 94 4c 01 	call	0x298	; 0x298 <initEmittors>
+	initDetectors();
+ 5c6:	0e 94 5f 01 	call	0x2be	; 0x2be <initDetectors>
+
+	delay(5000);
+ 5ca:	88 e8       	ldi	r24, 0x88	; 136
+ 5cc:	93 e1       	ldi	r25, 0x13	; 19
+ 5ce:	0e 94 0b 01 	call	0x216	; 0x216 <delay>
+	
+	mainLoop();
+ 5d2:	0e 94 43 02 	call	0x486	; 0x486 <mainLoop>
+
+	return 0;
+}
+ 5d6:	80 e0       	ldi	r24, 0x00	; 0
+ 5d8:	90 e0       	ldi	r25, 0x00	; 0
+ 5da:	08 95       	ret
+
+000005dc <initLED>:
+*/
+#include "LED.h"
+
+
+void initLED(){
+	LED_DDR |= (1<<GREEN);
+ 5dc:	22 9a       	sbi	0x04, 2	; 4
+	LED_DDR |= (1<<RED);
+ 5de:	23 9a       	sbi	0x04, 3	; 4
+	LED_PORT &= ~(1<<GREEN);
+ 5e0:	2a 98       	cbi	0x05, 2	; 5
+	LED_PORT &= ~(1<<RED);
+ 5e2:	2b 98       	cbi	0x05, 3	; 5
+}
+ 5e4:	08 95       	ret
+
+000005e6 <toggleGreen>:
+
+void toggleGreen(){		// green=right
+	LED_PORT ^= (1<<GREEN);
+ 5e6:	85 b1       	in	r24, 0x05	; 5
+ 5e8:	94 e0       	ldi	r25, 0x04	; 4
+ 5ea:	89 27       	eor	r24, r25
+ 5ec:	85 b9       	out	0x05, r24	; 5
+}
+ 5ee:	08 95       	ret
+
+000005f0 <setGreen>:
+void setGreen(){
+	LED_PORT |= (1<<GREEN);
+ 5f0:	2a 9a       	sbi	0x05, 2	; 5
+}
+ 5f2:	08 95       	ret
+
+000005f4 <clearGreen>:
+void clearGreen(){
+	LED_PORT &= ~(1<<GREEN);
+ 5f4:	2a 98       	cbi	0x05, 2	; 5
+}
+ 5f6:	08 95       	ret
+
+000005f8 <toggleRed>:
+
+void toggleRed(){		// red=left
+	LED_PORT ^= (1<<RED);
+ 5f8:	85 b1       	in	r24, 0x05	; 5
+ 5fa:	98 e0       	ldi	r25, 0x08	; 8
+ 5fc:	89 27       	eor	r24, r25
+ 5fe:	85 b9       	out	0x05, r24	; 5
+}
+ 600:	08 95       	ret
+
+00000602 <setRed>:
+void setRed(){
+	LED_PORT |= (1<<RED);
+ 602:	2b 9a       	sbi	0x05, 3	; 5
+}
+ 604:	08 95       	ret
+
+00000606 <clearRed>:
+void clearRed(){
+	LED_PORT &= ~(1<<RED);
+ 606:	2b 98       	cbi	0x05, 3	; 5
+}
+ 608:	08 95       	ret
+
+0000060a <spinRight>:
+	setMotorSpeed(-speed, 0);
+	setRed();
+	delay(500);
+}
+void spinRight(int speed)
+{
+ 60a:	bc 01       	movw	r22, r24
+	setMotorSpeed(-speed, speed);
+ 60c:	88 27       	eor	r24, r24
+ 60e:	99 27       	eor	r25, r25
+ 610:	86 1b       	sub	r24, r22
+ 612:	97 0b       	sbc	r25, r23
+ 614:	0e 94 d6 01 	call	0x3ac	; 0x3ac <setMotorSpeed>
+}
+ 618:	08 95       	ret
+
+0000061a <turnRight>:
+void spinLeft(int speed)
+{
+	setMotorSpeed(speed, -speed);
+}
+void turnRight(int speed)
+{
+ 61a:	bc 01       	movw	r22, r24
+	setMotorSpeed(0, speed);
+ 61c:	80 e0       	ldi	r24, 0x00	; 0
+ 61e:	90 e0       	ldi	r25, 0x00	; 0
+ 620:	0e 94 d6 01 	call	0x3ac	; 0x3ac <setMotorSpeed>
+}
+ 624:	08 95       	ret
+
+00000626 <spinLeft>:
+	setGreen();
+	delay(500);
+}
+void spinLeft(int speed)
+{
+	setMotorSpeed(speed, -speed);
+ 626:	66 27       	eor	r22, r22
+ 628:	77 27       	eor	r23, r23
+ 62a:	68 1b       	sub	r22, r24
+ 62c:	79 0b       	sbc	r23, r25
+ 62e:	0e 94 d6 01 	call	0x3ac	; 0x3ac <setMotorSpeed>
+}
+ 632:	08 95       	ret
+
+00000634 <turnLeft>:
+{
+	setMotorSpeed(-speed, -speed);
+}
+void turnLeft(int speed)
+{
+	setMotorSpeed(speed, 0);
+ 634:	60 e0       	ldi	r22, 0x00	; 0
+ 636:	70 e0       	ldi	r23, 0x00	; 0
+ 638:	0e 94 d6 01 	call	0x3ac	; 0x3ac <setMotorSpeed>
+}
+ 63c:	08 95       	ret
+
+0000063e <moveBackward>:
+	clearRed();
+	setMotorSpeed(speed, speed);
+}
+void moveBackward(int speed)
+{
+	setMotorSpeed(-speed, -speed);
+ 63e:	66 27       	eor	r22, r22
+ 640:	77 27       	eor	r23, r23
+ 642:	68 1b       	sub	r22, r24
+ 644:	79 0b       	sbc	r23, r25
+ 646:	cb 01       	movw	r24, r22
+ 648:	0e 94 d6 01 	call	0x3ac	; 0x3ac <setMotorSpeed>
+}
+ 64c:	08 95       	ret
+
+0000064e <stop>:
+#include "pilot.h"
+
+
+void stop()
+{
+	setMotorSpeed(0,0);
+ 64e:	80 e0       	ldi	r24, 0x00	; 0
+ 650:	90 e0       	ldi	r25, 0x00	; 0
+ 652:	60 e0       	ldi	r22, 0x00	; 0
+ 654:	70 e0       	ldi	r23, 0x00	; 0
+ 656:	0e 94 d6 01 	call	0x3ac	; 0x3ac <setMotorSpeed>
+}
+ 65a:	08 95       	ret
+
+0000065c <turnBackRight>:
+{
+	setMotorSpeed(0, speed);
+}
+void turnBackRight(int speed)
+{
+	setMotorSpeed(-speed, 0);
+ 65c:	90 95       	com	r25
+ 65e:	81 95       	neg	r24
+ 660:	9f 4f       	sbci	r25, 0xFF	; 255
+ 662:	60 e0       	ldi	r22, 0x00	; 0
+ 664:	70 e0       	ldi	r23, 0x00	; 0
+ 666:	0e 94 d6 01 	call	0x3ac	; 0x3ac <setMotorSpeed>
+	setRed();
+ 66a:	0e 94 01 03 	call	0x602	; 0x602 <setRed>
+	delay(500);
+ 66e:	84 ef       	ldi	r24, 0xF4	; 244
+ 670:	91 e0       	ldi	r25, 0x01	; 1
+ 672:	0e 94 0b 01 	call	0x216	; 0x216 <delay>
+}
+ 676:	08 95       	ret
+
+00000678 <turnBackLeft>:
+{
+	setMotorSpeed(speed, 0);
+}
+void turnBackLeft(int speed)
+{
+	setMotorSpeed(0, -speed);
+ 678:	66 27       	eor	r22, r22
+ 67a:	77 27       	eor	r23, r23
+ 67c:	68 1b       	sub	r22, r24
+ 67e:	79 0b       	sbc	r23, r25
+ 680:	80 e0       	ldi	r24, 0x00	; 0
+ 682:	90 e0       	ldi	r25, 0x00	; 0
+ 684:	0e 94 d6 01 	call	0x3ac	; 0x3ac <setMotorSpeed>
+	setGreen();
+ 688:	0e 94 f8 02 	call	0x5f0	; 0x5f0 <setGreen>
+	delay(500);
+ 68c:	84 ef       	ldi	r24, 0xF4	; 244
+ 68e:	91 e0       	ldi	r25, 0x01	; 1
+ 690:	0e 94 0b 01 	call	0x216	; 0x216 <delay>
+}
+ 694:	08 95       	ret
+
+00000696 <moveForward>:
+{
+	setMotorSpeed(0,0);
+}
+
+void moveForward(int speed)
+{
+ 696:	0f 93       	push	r16
+ 698:	1f 93       	push	r17
+ 69a:	8c 01       	movw	r16, r24
+	clearGreen();
+ 69c:	0e 94 fa 02 	call	0x5f4	; 0x5f4 <clearGreen>
+	clearRed();
+ 6a0:	0e 94 03 03 	call	0x606	; 0x606 <clearRed>
+	setMotorSpeed(speed, speed);
+ 6a4:	c8 01       	movw	r24, r16
+ 6a6:	b8 01       	movw	r22, r16
+ 6a8:	0e 94 d6 01 	call	0x3ac	; 0x3ac <setMotorSpeed>
+}
+ 6ac:	1f 91       	pop	r17
+ 6ae:	0f 91       	pop	r16
+ 6b0:	08 95       	ret
+
+000006b2 <__divmodhi4>:
+ 6b2:	97 fb       	bst	r25, 7
+ 6b4:	09 2e       	mov	r0, r25
+ 6b6:	07 26       	eor	r0, r23
+ 6b8:	0a d0       	rcall	.+20     	; 0x6ce <__divmodhi4_neg1>
+ 6ba:	77 fd       	sbrc	r23, 7
+ 6bc:	04 d0       	rcall	.+8      	; 0x6c6 <__divmodhi4_neg2>
+ 6be:	0c d0       	rcall	.+24     	; 0x6d8 <__udivmodhi4>
+ 6c0:	06 d0       	rcall	.+12     	; 0x6ce <__divmodhi4_neg1>
+ 6c2:	00 20       	and	r0, r0
+ 6c4:	1a f4       	brpl	.+6      	; 0x6cc <__divmodhi4_exit>
+
+000006c6 <__divmodhi4_neg2>:
+ 6c6:	70 95       	com	r23
+ 6c8:	61 95       	neg	r22
+ 6ca:	7f 4f       	sbci	r23, 0xFF	; 255
+
+000006cc <__divmodhi4_exit>:
+ 6cc:	08 95       	ret
+
+000006ce <__divmodhi4_neg1>:
+ 6ce:	f6 f7       	brtc	.-4      	; 0x6cc <__divmodhi4_exit>
+ 6d0:	90 95       	com	r25
+ 6d2:	81 95       	neg	r24
+ 6d4:	9f 4f       	sbci	r25, 0xFF	; 255
+ 6d6:	08 95       	ret
+
+000006d8 <__udivmodhi4>:
+ 6d8:	aa 1b       	sub	r26, r26
+ 6da:	bb 1b       	sub	r27, r27
+ 6dc:	51 e1       	ldi	r21, 0x11	; 17
+ 6de:	07 c0       	rjmp	.+14     	; 0x6ee <__udivmodhi4_ep>
+
+000006e0 <__udivmodhi4_loop>:
+ 6e0:	aa 1f       	adc	r26, r26
+ 6e2:	bb 1f       	adc	r27, r27
+ 6e4:	a6 17       	cp	r26, r22
+ 6e6:	b7 07       	cpc	r27, r23
+ 6e8:	10 f0       	brcs	.+4      	; 0x6ee <__udivmodhi4_ep>
+ 6ea:	a6 1b       	sub	r26, r22
+ 6ec:	b7 0b       	sbc	r27, r23
+
+000006ee <__udivmodhi4_ep>:
+ 6ee:	88 1f       	adc	r24, r24
+ 6f0:	99 1f       	adc	r25, r25
+ 6f2:	5a 95       	dec	r21
+ 6f4:	a9 f7       	brne	.-22     	; 0x6e0 <__udivmodhi4_loop>
+ 6f6:	80 95       	com	r24
+ 6f8:	90 95       	com	r25
+ 6fa:	bc 01       	movw	r22, r24
+ 6fc:	cd 01       	movw	r24, r26
+ 6fe:	08 95       	ret
+
+00000700 <_exit>:
+ 700:	f8 94       	cli
+
+00000702 <__stop_program>:
+ 702:	ff cf       	rjmp	.-2      	; 0x702 <__stop_program>
